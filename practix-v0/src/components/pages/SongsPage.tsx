@@ -21,7 +21,7 @@ interface SongsPageProps {
   confirmMessage: string;
   onConfirm: () => void;
   onCancelConfirm: () => void;
-  onShowStats?: () => void;
+  onShowStats: () => void;
   // Trash functionality
   trashedRecordings?: TrashedRecording[];
   onRestoreFromTrash?: (recordingId: number) => TrashedRecording | null;
@@ -222,17 +222,15 @@ export default function SongsPage({
           </div>
 
           {/* Stats Icon */}
-          {onShowStats && (
-            <button
-              onClick={onShowStats}
-              className={`p-2 rounded-lg transition-colors ${
-                isDark ? 'hover:bg-zinc-800 text-zinc-400 hover:text-zinc-200' : 'hover:bg-zinc-200 text-zinc-500 hover:text-zinc-700'
-              }`}
-              aria-label="통계 보기"
-            >
-              <BarChart2 className="w-5 h-5" />
-            </button>
-          )}
+          <button
+            onClick={onShowStats}
+            className={`p-2 rounded-lg transition-colors ${
+              isDark ? 'hover:bg-zinc-800 text-zinc-400 hover:text-zinc-200' : 'hover:bg-zinc-200 text-zinc-500 hover:text-zinc-700'
+            }`}
+            aria-label="통계 보기"
+          >
+            <BarChart2 className="w-5 h-5" />
+          </button>
         </div>
       </header>
 
