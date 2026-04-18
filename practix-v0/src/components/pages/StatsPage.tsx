@@ -93,8 +93,8 @@ export default function StatsPage({ songs, onBack }: StatsPageProps) {
         <section className="bg-card border border-border rounded-xl p-6">
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center">
-                <Target className="w-5 h-5 text-accent" />
+              <div className="w-10 h-10 rounded-lg bg-gradient-brand-subtle flex items-center justify-center">
+                <Target className="w-5 h-5 text-primary" />
               </div>
               <span className="font-semibold text-lg text-foreground">{"오늘의 목표"}</span>
             </div>

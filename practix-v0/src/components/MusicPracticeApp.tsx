@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useCallback, useEffect, useMemo } from 'react';
-import { HelpCircle } from 'lucide-react';
+import { HelpCircle, Music, BarChart3, Timer, Guitar } from 'lucide-react';
 import { Song, Session, Section, SheetMusic, Recording, TrashedRecording, MetronomeSettings } from '@/types';
 import { useAudioContext } from '@/hooks/useAudioContext';
 import { useTrash } from '@/hooks/useTrash';
@@ -439,7 +439,7 @@ export default function MusicPracticeApp({ onShowTutorial }: MusicPracticeAppPro
             </button>
             <button
               onClick={openStorageSettings}
-              className="flex-1 px-4 py-2.5 bg-accent hover:opacity-90 text-accent-foreground rounded-lg font-medium transition-opacity"
+              className="flex-1 px-4 py-2.5 bg-gradient-brand hover:opacity-90 text-white rounded-lg font-medium transition-opacity shadow-sm"
             >
               설정 열기
             </button>
@@ -459,7 +459,7 @@ export default function MusicPracticeApp({ onShowTutorial }: MusicPracticeAppPro
         className="fixed left-4 z-40 flex items-center gap-2 px-4 py-2 bg-card rounded-full shadow-lg border border-border hover:bg-secondary transition-all"
         style={{ bottom: 'calc(1rem + var(--sab, 0px))' }}
       >
-        <HelpCircle className="w-4 h-4 text-accent" />
+        <HelpCircle className="w-4 h-4 text-primary" />
         <span className="text-sm text-muted-foreground">도움말</span>
       </button>
     );
@@ -476,15 +476,14 @@ export default function MusicPracticeApp({ onShowTutorial }: MusicPracticeAppPro
     );
   };
 
-  // Bottom Navigation Bar - 2026 Modern Style
+  // Bottom Navigation Bar - 2026 Modern Style with Blue/Purple theme
   const BottomNav = () => (
     <nav className="fixed bottom-0 left-0 right-0 z-40 bg-card/95 backdrop-blur-md border-t border-border" style={{ paddingBottom: 'var(--sab, 0px)' }}>
       <div className="flex items-center justify-around max-w-lg mx-auto">
         <NavTab
-          icon="🎵"
+          icon={<Music className="w-5 h-5" />}
           label="곡 목록"
           isActive={page === 'songs' || page === 'sessions' || page === 'practice'}
-          isDark={isDark}
           onClick={() => {
             if (page === 'practice') setPage('sessions');
             else if (page === 'sessions') setPage('songs');
@@ -492,24 +491,21 @@ export default function MusicPracticeApp({ onShowTutorial }: MusicPracticeAppPro
           }}
         />
         <NavTab
-          icon="📊"
+          icon={<BarChart3 className="w-5 h-5" />}
           label="통계"
           isActive={page === 'stats'}
-          isDark={isDark}
           onClick={() => setPage('stats')}
         />
         <NavTab
-          icon="🎚️"
+          icon={<Timer className="w-5 h-5" />}
           label="메트로놈"
           isActive={page === 'metronome'}
-          isDark={isDark}
           onClick={() => setPage('metronome')}
         />
         <NavTab
-          icon="🎸"
+          icon={<Guitar className="w-5 h-5" />}
           label="튜너"
           isActive={page === 'tuner'}
-          isDark={isDark}
           onClick={() => setPage('tuner')}
         />
       </div>
@@ -648,12 +644,11 @@ export default function MusicPracticeApp({ onShowTutorial }: MusicPracticeAppPro
   return null;
 }
 
-// Bottom nav tab button - Modern 2026 Style
-function NavTab({ icon, label, isActive, isDark, onClick }: {
-  icon: string;
+// Bottom nav tab button - Modern 2026 Style with minimalistic icons
+function NavTab({ icon, label, isActive, onClick }: {
+  icon: React.ReactNode;
   label: string;
   isActive: boolean;
-  isDark: boolean;
   onClick: () => void;
 }) {
   return (
@@ -661,16 +656,16 @@ function NavTab({ icon, label, isActive, isDark, onClick }: {
       onClick={onClick}
       className={`relative flex-1 flex flex-col items-center py-3 transition-all active:scale-95 ${
         isActive
-          ? 'text-accent'
+          ? 'text-primary'
           : 'text-muted-foreground hover:text-foreground'
       }`}
     >
-      {/* Active indicator */}
+      {/* Active indicator - gradient line */}
       {isActive && (
-        <span className="absolute top-0 left-1/2 -translate-x-1/2 w-8 h-1 bg-accent rounded-b-full" />
+        <span className="absolute top-0 left-1/2 -translate-x-1/2 w-10 h-0.5 bg-gradient-brand rounded-full" />
       )}
-      <span className="text-xl">{icon}</span>
-      <span className="text-[11px] mt-1 font-medium">{label}</span>
+      <span className={`transition-transform ${isActive ? 'scale-110' : ''}`}>{icon}</span>
+      <span className="text-[10px] mt-1.5 font-medium tracking-wide">{label}</span>
     </button>
   );
 }

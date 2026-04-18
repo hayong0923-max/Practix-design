@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { Play, Mic, Music, Repeat, BarChart3, Smartphone, ArrowRight, Check } from 'lucide-react';
+import { Play, Mic, Music, Repeat, BarChart3, Smartphone, ArrowRight, Check, Sparkles } from 'lucide-react';
 import NotificationSignup from './NotificationSignup';
 
 const features = [
@@ -52,7 +52,7 @@ export default function LandingPage() {
           <Image src="/logo.png" alt="Practix" width={120} height={40} className="h-8 w-auto" />
           <button
             onClick={goToApp}
-            className="px-5 py-2.5 bg-primary text-primary-foreground rounded-lg text-sm font-medium hover:opacity-90 transition-opacity"
+            className="px-5 py-2.5 bg-gradient-brand text-white rounded-lg text-sm font-medium hover:opacity-90 transition-opacity shadow-sm"
           >
             앱 사용하기
           </button>
@@ -60,17 +60,24 @@ export default function LandingPage() {
       </header>
 
       {/* Hero Section */}
-      <section className="pt-32 pb-24 px-6">
-        <div className="max-w-6xl mx-auto">
+      <section className="pt-32 pb-24 px-6 relative overflow-hidden">
+        {/* Background gradient orbs */}
+        <div className="absolute top-20 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute top-40 right-1/4 w-80 h-80 bg-accent/10 rounded-full blur-3xl pointer-events-none" />
+        
+        <div className="max-w-6xl mx-auto relative">
           <div className="max-w-3xl">
-            <p className="text-sm font-medium text-accent mb-6 tracking-wide uppercase">
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-brand-subtle rounded-full text-sm font-medium text-primary mb-6">
+              <Sparkles className="w-4 h-4" />
               음악 연습의 새로운 방법
-            </p>
+            </div>
 
             <h1 className="font-serif text-5xl md:text-7xl font-bold text-foreground mb-8 leading-tight text-balance">
               연습은 스마트하게,
               <br />
-              실력은 확실하게
+              <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+                실력은 확실하게
+              </span>
             </h1>
 
             <p className="text-lg md:text-xl text-muted-foreground mb-12 leading-relaxed max-w-xl">
@@ -81,7 +88,7 @@ export default function LandingPage() {
             <div className="flex flex-col sm:flex-row gap-4">
               <button
                 onClick={goToApp}
-                className="inline-flex items-center justify-center gap-3 px-8 py-4 bg-primary text-primary-foreground rounded-lg font-semibold text-base hover:opacity-90 transition-all"
+                className="inline-flex items-center justify-center gap-3 px-8 py-4 bg-gradient-brand text-white rounded-xl font-semibold text-base hover:opacity-90 transition-all shadow-lg shadow-primary/25"
               >
                 <Play className="w-5 h-5" />
                 무료로 시작하기
@@ -90,7 +97,7 @@ export default function LandingPage() {
 
               <button
                 onClick={() => setShowNotification(true)}
-                className="inline-flex items-center justify-center gap-3 px-8 py-4 bg-secondary text-secondary-foreground rounded-lg font-medium text-base hover:bg-secondary/80 transition-colors"
+                className="inline-flex items-center justify-center gap-3 px-8 py-4 bg-secondary text-secondary-foreground rounded-xl font-medium text-base hover:bg-secondary/80 transition-colors border border-border"
               >
                 <Smartphone className="w-5 h-5" />
                 모바일 앱 알림 받기
@@ -104,7 +111,7 @@ export default function LandingPage() {
       <section className="py-24 px-6 bg-card border-y border-border">
         <div className="max-w-6xl mx-auto">
           <div className="mb-16">
-            <p className="text-sm font-medium text-accent mb-4 tracking-wide uppercase">
+            <p className="text-sm font-medium text-primary mb-4 tracking-wide uppercase">
               Features
             </p>
             <h2 className="font-serif text-3xl md:text-4xl font-bold text-foreground text-balance">
@@ -119,10 +126,10 @@ export default function LandingPage() {
             {features.map((feature, idx) => (
               <div
                 key={idx}
-                className="group p-6 rounded-xl bg-background border border-border hover:border-foreground/20 transition-all"
+                className="group p-6 rounded-2xl bg-background border border-border hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5 transition-all"
               >
-                <div className="w-12 h-12 rounded-lg bg-secondary flex items-center justify-center mb-5 group-hover:bg-accent group-hover:text-accent-foreground transition-colors">
-                  <feature.icon className="w-6 h-6" />
+                <div className="w-12 h-12 rounded-xl bg-gradient-brand-subtle flex items-center justify-center mb-5 group-hover:bg-gradient-brand group-hover:text-white transition-all">
+                  <feature.icon className="w-6 h-6 text-primary group-hover:text-white" />
                 </div>
                 <h3 className="text-lg font-semibold text-foreground mb-2">{feature.title}</h3>
                 <p className="text-muted-foreground text-sm leading-relaxed">{feature.description}</p>
@@ -136,7 +143,7 @@ export default function LandingPage() {
       <section className="py-24 px-6">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
-            <p className="text-sm font-medium text-accent mb-4 tracking-wide uppercase">
+            <p className="text-sm font-medium text-primary mb-4 tracking-wide uppercase">
               How it works
             </p>
             <h2 className="font-serif text-3xl md:text-4xl font-bold text-foreground">
@@ -151,7 +158,7 @@ export default function LandingPage() {
               { step: '03', title: '녹음 & 비교', desc: '녹음하고 원곡과 비교하며 실력을 키우세요' },
             ].map((item, idx) => (
               <div key={idx} className="text-center">
-                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-secondary text-foreground font-serif text-xl font-bold mb-6">
+                <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-brand text-white font-serif text-xl font-bold mb-6 shadow-lg shadow-primary/25">
                   {item.step}
                 </div>
                 <h3 className="text-xl font-semibold text-foreground mb-3">{item.title}</h3>
@@ -165,40 +172,47 @@ export default function LandingPage() {
       {/* Benefits CTA */}
       <section className="py-24 px-6">
         <div className="max-w-4xl mx-auto">
-          <div className="bg-primary text-primary-foreground rounded-2xl p-10 md:p-14">
-            <div className="text-center mb-10">
-              <h2 className="font-serif text-3xl md:text-4xl font-bold mb-4">지금 바로 시작하세요</h2>
-              <p className="text-primary-foreground/70 text-lg">복잡한 가입 절차 없이 바로 사용할 수 있습니다</p>
-            </div>
+          <div className="bg-gradient-brand text-white rounded-3xl p-10 md:p-14 relative overflow-hidden">
+            {/* Decorative elements */}
+            <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl pointer-events-none" />
+            <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/5 rounded-full blur-2xl pointer-events-none" />
+            
+            <div className="relative">
+              <div className="text-center mb-10">
+                <h2 className="font-serif text-3xl md:text-4xl font-bold mb-4">지금 바로 시작하세요</h2>
+                <p className="text-white/70 text-lg">복잡한 가입 절차 없이 바로 사용할 수 있습니다</p>
+              </div>
 
-            <div className="grid md:grid-cols-2 gap-4 mb-10 max-w-2xl mx-auto">
-              {benefits.map((benefit, idx) => (
-                <div key={idx} className="flex items-center gap-3">
-                  <div className="w-5 h-5 rounded-full bg-primary-foreground/20 flex items-center justify-center flex-shrink-0">
-                    <Check className="w-3 h-3" />
+              <div className="grid md:grid-cols-2 gap-4 mb-10 max-w-2xl mx-auto">
+                {benefits.map((benefit, idx) => (
+                  <div key={idx} className="flex items-center gap-3">
+                    <div className="w-5 h-5 rounded-full bg-white/20 flex items-center justify-center flex-shrink-0">
+                      <Check className="w-3 h-3" />
+                    </div>
+                    <span className="text-sm">{benefit}</span>
                   </div>
-                  <span className="text-sm">{benefit}</span>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
 
-            <div className="text-center">
-              <button
-                onClick={goToApp}
-                className="inline-flex items-center gap-3 px-8 py-4 bg-primary-foreground text-primary rounded-lg font-semibold text-base hover:opacity-90 transition-opacity"
-              >
-                <Play className="w-5 h-5" />
-                무료로 체험하기
-              </button>
+              <div className="text-center">
+                <button
+                  onClick={goToApp}
+                  className="inline-flex items-center gap-3 px-8 py-4 bg-white text-primary rounded-xl font-semibold text-base hover:bg-white/90 transition-all shadow-lg"
+                >
+                  <Play className="w-5 h-5" />
+                  무료로 체험하기
+                </button>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
       {/* Mobile App Coming Soon */}
-      <section className="py-24 px-6 bg-secondary/50 border-t border-border">
+      <section className="py-24 px-6 bg-gradient-brand-subtle border-t border-border">
         <div className="max-w-4xl mx-auto text-center">
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-accent/10 text-accent rounded-full text-sm font-medium mb-6">
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 text-primary rounded-full text-sm font-medium mb-6">
+            <Sparkles className="w-4 h-4" />
             Coming Soon
           </div>
 
@@ -212,7 +226,7 @@ export default function LandingPage() {
 
           <button
             onClick={() => setShowNotification(true)}
-            className="inline-flex items-center gap-3 px-8 py-4 bg-accent text-accent-foreground rounded-lg font-semibold text-base hover:opacity-90 transition-opacity"
+            className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-brand text-white rounded-xl font-semibold text-base hover:opacity-90 transition-opacity shadow-lg shadow-primary/25"
           >
             <Smartphone className="w-5 h-5" />
             출시 알림 신청하기

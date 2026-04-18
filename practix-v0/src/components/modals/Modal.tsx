@@ -32,7 +32,7 @@ export default function Modal({ show, onClose, title, inputValue, onInputChange,
           onChange={(e) => onInputChange(e.target.value)}
           onKeyPress={(e) => e.key === 'Enter' && onSubmit()}
           placeholder="이름을 입력하세요"
-          className="w-full border border-input bg-background text-foreground rounded-lg p-3 mb-5 focus:outline-none focus:ring-2 focus:ring-ring"
+          className="w-full border border-input bg-background text-foreground rounded-lg p-3 mb-5 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary"
           autoFocus
         />
         <div className="flex gap-3">
@@ -44,7 +44,7 @@ export default function Modal({ show, onClose, title, inputValue, onInputChange,
           </button>
           <button
             onClick={onSubmit}
-            className="flex-1 bg-primary hover:opacity-90 text-primary-foreground py-2.5 rounded-lg font-medium transition-opacity"
+            className="flex-1 bg-gradient-brand hover:opacity-90 text-white py-2.5 rounded-lg font-medium transition-opacity shadow-sm"
           >
             추가
           </button>

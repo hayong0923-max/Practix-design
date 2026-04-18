@@ -31,7 +31,7 @@ export default function ConfirmModal({
   const colorClasses = {
     red: 'bg-destructive hover:bg-destructive/90 text-destructive-foreground',
     green: 'bg-success hover:bg-success/90 text-success-foreground',
-    purple: 'bg-accent hover:bg-accent/90 text-accent-foreground',
+    purple: 'bg-gradient-brand hover:opacity-90 text-white',
   };
 
   const handleConfirm = () => {

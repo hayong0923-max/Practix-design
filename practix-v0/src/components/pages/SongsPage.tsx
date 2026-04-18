@@ -72,7 +72,7 @@ export default function SongsPage({
             )}
             <button
               onClick={() => onShowAddSong(true)}
-              className="flex items-center gap-2 px-4 py-2.5 bg-primary text-primary-foreground rounded-lg font-medium text-sm hover:opacity-90 transition-opacity"
+              className="flex items-center gap-2 px-4 py-2.5 bg-gradient-brand text-white rounded-lg font-medium text-sm hover:opacity-90 transition-opacity shadow-sm"
             >
               <Plus className="w-4 h-4" />
               <span>곡 추가</span>
@@ -92,7 +92,7 @@ export default function SongsPage({
             <p className="text-muted-foreground mb-6">첫 번째 곡을 추가해 연습을 시작하세요</p>
             <button
               onClick={() => onShowAddSong(true)}
-              className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-lg font-medium hover:opacity-90 transition-opacity"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-brand text-white rounded-lg font-medium hover:opacity-90 transition-opacity shadow-sm"
             >
               <Plus className="w-4 h-4" />
               곡 추가하기
@@ -107,8 +107,8 @@ export default function SongsPage({
                   className="w-full bg-card border border-border hover:border-foreground/20 rounded-xl p-5 flex justify-between items-center transition-all"
                 >
                   <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-lg bg-secondary flex items-center justify-center flex-shrink-0">
-                      <Music className="w-5 h-5 text-muted-foreground" />
+                    <div className="w-12 h-12 rounded-lg bg-gradient-brand-subtle flex items-center justify-center flex-shrink-0">
+                      <Music className="w-5 h-5 text-primary" />
                     </div>
                     <div className="text-left">
                       <h3 className="font-semibold text-foreground text-base">{song.name}</h3>
