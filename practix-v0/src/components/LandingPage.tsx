@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import Image from 'next/image';
 import { Play, Mic, Music, Repeat, BarChart3, Smartphone, ArrowRight, Check } from 'lucide-react';
 import NotificationSignup from './NotificationSignup';
@@ -37,24 +37,19 @@ const benefits = [
 ];
 
 export default function LandingPage() {
-  const router = useRouter();
   const [showNotification, setShowNotification] = useState(false);
-
-  const goToApp = () => {
-    router.push('/app');
-  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
       {/* Header */}
       <div className="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
         <Image src="/logo.png" alt="Practix" width={160} height={53} className="h-12 md:h-14 w-auto" />
-        <button
-          onClick={goToApp}
+        <Link
+          href="/app"
           className="flex items-center gap-1 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg text-sm font-medium"
         >
           앱 사용하기
-        </button>
+        </Link>
       </div>
 
       {/* Hero Section */}
@@ -77,14 +72,14 @@ export default function LandingPage() {
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <button
-                onClick={goToApp}
+              <Link
+                href="/app"
                 className="flex items-center gap-2 px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-semibold text-lg shadow-lg shadow-blue-200 transition-all hover:scale-105"
               >
                 <Play className="w-5 h-5" />
                 무료로 시작하기
                 <ArrowRight className="w-5 h-5" />
-              </button>
+              </Link>
 
               <button
                 onClick={() => setShowNotification(true)}
@@ -189,13 +184,13 @@ export default function LandingPage() {
             </div>
 
             <div className="text-center">
-              <button
-                onClick={goToApp}
+              <Link
+                href="/app"
                 className="inline-flex items-center gap-2 px-8 py-4 bg-white text-blue-600 rounded-xl font-semibold text-lg hover:bg-blue-50 transition-colors"
               >
                 <Play className="w-5 h-5" />
                 무료로 체험하기
-              </button>
+              </Link>
             </div>
           </div>
         </div>
