@@ -703,5 +703,43 @@ export default function MusicPracticeApp({ onShowTutorial }: MusicPracticeAppPro
     );
   }
 
-  return null;
+  // Fallback: if we reach here, redirect to songs page
+  // This ensures the app always shows something
+  if (!isLoaded) {
+    return (
+      <div className={`min-h-screen flex items-center justify-center ${isDark ? 'bg-zinc-950' : 'bg-zinc-50'}`}>
+        <div className={`animate-pulse ${isDark ? 'text-zinc-600' : 'text-zinc-400'}`}>로딩 중...</div>
+      </div>
+    );
+  }
+
+  // Default to songs page if something went wrong
+  return (
+    <>
+      <SongsPage
+        songs={songs}
+        onSelectSong={handleSelectSong}
+        onDeleteSong={deleteSong}
+        showAddSong={showAddSong}
+        onShowAddSong={setShowAddSong}
+        inputValue={inputValue}
+        onInputChange={setInputValue}
+        onAddSong={handleAddSong}
+        showConfirm={showConfirm}
+        confirmMessage={confirmMessage}
+        onConfirm={confirmAction || (() => {})}
+        onCancelConfirm={() => setShowConfirm(false)}
+        onShowStats={() => setPage('stats')}
+        trashedRecordings={trashedRecordings}
+        onRestoreFromTrash={restoreFromTrash}
+        onRestoreRecording={handleRestoreRecording}
+        onPermanentDelete={permanentlyDelete}
+        onEmptyTrash={emptyTrash}
+      />
+      <HelpButton />
+      <PermissionDialog />
+      <ExitToast />
+      <FirstRunTooltip />
+    </>
+  );
 }
