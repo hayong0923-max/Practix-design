@@ -1,12 +1,29 @@
 import type { Metadata, Viewport } from 'next';
+import { Noto_Sans_KR, Noto_Serif_KR } from 'next/font/google';
 import './globals.css';
 import Providers from '@/components/providers/Providers';
+
+const notoSansKR = Noto_Sans_KR({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-sans',
+});
+
+const notoSerifKR = Noto_Serif_KR({
+  subsets: ['latin'],
+  weight: ['400', '600', '700'],
+  variable: '--font-serif',
+});
 
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
   maximumScale: 1,
   viewportFit: 'cover',
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#f7f5f2' },
+    { media: '(prefers-color-scheme: dark)', color: '#14161a' },
+  ],
 };
 
 export const metadata: Metadata = {
@@ -29,8 +46,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="ko">
-      <body>
+    <html lang="ko" className={`${notoSansKR.variable} ${notoSerifKR.variable} bg-background`}>
+      <body className="font-sans">
         <Providers>{children}</Providers>
       </body>
     </html>

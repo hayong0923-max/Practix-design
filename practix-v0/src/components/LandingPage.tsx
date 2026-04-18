@@ -45,50 +45,52 @@ export default function LandingPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
+    <div className="min-h-screen bg-background">
       {/* Header */}
-      <div className="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
-        <Image src="/logo.png" alt="Practix" width={160} height={53} className="h-12 md:h-14 w-auto" />
-        <button
-          onClick={goToApp}
-          className="flex items-center gap-1 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg text-sm font-medium"
-        >
-          앱 사용하기
-        </button>
-      </div>
+      <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
+        <div className="max-w-6xl mx-auto px-6 h-16 flex justify-between items-center">
+          <Image src="/logo.png" alt="Practix" width={120} height={40} className="h-8 w-auto" />
+          <button
+            onClick={goToApp}
+            className="px-5 py-2.5 bg-primary text-primary-foreground rounded-lg text-sm font-medium hover:opacity-90 transition-opacity"
+          >
+            앱 사용하기
+          </button>
+        </div>
+      </header>
 
       {/* Hero Section */}
-      <div className="relative overflow-hidden">
-        <div className="max-w-6xl mx-auto px-4 pt-12 pb-24">
-          <div className="text-center">
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-100 rounded-full text-blue-700 text-sm font-medium mb-6">
-              <Music className="w-4 h-4" />
+      <section className="pt-32 pb-24 px-6">
+        <div className="max-w-6xl mx-auto">
+          <div className="max-w-3xl">
+            <p className="text-sm font-medium text-accent mb-6 tracking-wide uppercase">
               음악 연습의 새로운 방법
-            </div>
+            </p>
 
-            <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6 leading-snug md:leading-tight">
-              연습은 <span className="text-blue-600">스마트</span>하게,<br />
-              실력은 <span className="text-purple-600">확실</span>하게
+            <h1 className="font-serif text-5xl md:text-7xl font-bold text-foreground mb-8 leading-tight text-balance">
+              연습은 스마트하게,
+              <br />
+              실력은 확실하게
             </h1>
 
-            <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto leading-relaxed">
-              구간 반복, A/B 비교, 녹음 기능을 하나의 앱에서.<br />
+            <p className="text-lg md:text-xl text-muted-foreground mb-12 leading-relaxed max-w-xl">
+              구간 반복, A/B 비교, 녹음 기능을 하나의 앱에서.
               당신의 음악 연습을 완전히 바꿔드립니다.
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <div className="flex flex-col sm:flex-row gap-4">
               <button
                 onClick={goToApp}
-                className="flex items-center gap-2 px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-semibold text-lg shadow-lg shadow-blue-200 transition-all hover:scale-105"
+                className="inline-flex items-center justify-center gap-3 px-8 py-4 bg-primary text-primary-foreground rounded-lg font-semibold text-base hover:opacity-90 transition-all"
               >
                 <Play className="w-5 h-5" />
                 무료로 시작하기
-                <ArrowRight className="w-5 h-5" />
+                <ArrowRight className="w-4 h-4" />
               </button>
 
               <button
                 onClick={() => setShowNotification(true)}
-                className="flex items-center gap-2 px-8 py-4 bg-white hover:bg-gray-50 text-gray-700 rounded-xl font-semibold text-lg border-2 border-gray-200 transition-all"
+                className="inline-flex items-center justify-center gap-3 px-8 py-4 bg-secondary text-secondary-foreground rounded-lg font-medium text-base hover:bg-secondary/80 transition-colors"
               >
                 <Smartphone className="w-5 h-5" />
                 모바일 앱 알림 받기
@@ -96,94 +98,86 @@ export default function LandingPage() {
             </div>
           </div>
         </div>
-
-        {/* Decorative elements */}
-        <div className="absolute top-20 left-10 w-72 h-72 bg-blue-200 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-pulse"></div>
-        <div className="absolute top-40 right-10 w-72 h-72 bg-purple-200 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-pulse"></div>
-      </div>
+      </section>
 
       {/* Features Section */}
-      <div className="py-20 bg-white">
-        <div className="max-w-6xl mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+      <section className="py-24 px-6 bg-card border-y border-border">
+        <div className="max-w-6xl mx-auto">
+          <div className="mb-16">
+            <p className="text-sm font-medium text-accent mb-4 tracking-wide uppercase">
+              Features
+            </p>
+            <h2 className="font-serif text-3xl md:text-4xl font-bold text-foreground text-balance">
               효과적인 연습을 위한 모든 기능
             </h2>
-            <p className="text-lg text-gray-600">
+            <p className="text-muted-foreground mt-4 text-lg">
               프로 뮤지션들이 사용하는 연습 방법을 누구나 쉽게
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {features.map((feature, idx) => (
               <div
                 key={idx}
-                className="p-6 rounded-2xl bg-gradient-to-br from-gray-50 to-white border border-gray-100 hover:shadow-lg transition-shadow"
+                className="group p-6 rounded-xl bg-background border border-border hover:border-foreground/20 transition-all"
               >
-                <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mb-4">
-                  <feature.icon className="w-6 h-6 text-blue-600" />
+                <div className="w-12 h-12 rounded-lg bg-secondary flex items-center justify-center mb-5 group-hover:bg-accent group-hover:text-accent-foreground transition-colors">
+                  <feature.icon className="w-6 h-6" />
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">{feature.title}</h3>
-                <p className="text-gray-600">{feature.description}</p>
+                <h3 className="text-lg font-semibold text-foreground mb-2">{feature.title}</h3>
+                <p className="text-muted-foreground text-sm leading-relaxed">{feature.description}</p>
               </div>
             ))}
           </div>
         </div>
-      </div>
+      </section>
 
       {/* How it works */}
-      <div className="py-20 bg-gradient-to-br from-blue-50 to-purple-50">
-        <div className="max-w-6xl mx-auto px-4">
+      <section className="py-24 px-6">
+        <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            <p className="text-sm font-medium text-accent mb-4 tracking-wide uppercase">
+              How it works
+            </p>
+            <h2 className="font-serif text-3xl md:text-4xl font-bold text-foreground">
               3단계로 시작하는 스마트 연습
             </h2>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
-            <div className="text-center">
-              <div className="w-16 h-16 bg-blue-600 text-white rounded-2xl flex items-center justify-center text-2xl font-bold mx-auto mb-4">
-                1
+          <div className="grid md:grid-cols-3 gap-12">
+            {[
+              { step: '01', title: '음원 업로드', desc: '연습할 곡의 음원 파일을 업로드하세요' },
+              { step: '02', title: '구간 설정', desc: '파형에서 연습할 구간을 드래그로 선택하세요' },
+              { step: '03', title: '녹음 & 비교', desc: '녹음하고 원곡과 비교하며 실력을 키우세요' },
+            ].map((item, idx) => (
+              <div key={idx} className="text-center">
+                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-secondary text-foreground font-serif text-xl font-bold mb-6">
+                  {item.step}
+                </div>
+                <h3 className="text-xl font-semibold text-foreground mb-3">{item.title}</h3>
+                <p className="text-muted-foreground">{item.desc}</p>
               </div>
-              <h3 className="text-xl font-semibold mb-2">음원 업로드</h3>
-              <p className="text-gray-600">연습할 곡의 음원 파일을 업로드하세요</p>
-            </div>
-
-            <div className="text-center">
-              <div className="w-16 h-16 bg-purple-600 text-white rounded-2xl flex items-center justify-center text-2xl font-bold mx-auto mb-4">
-                2
-              </div>
-              <h3 className="text-xl font-semibold mb-2">구간 설정</h3>
-              <p className="text-gray-600">파형에서 연습할 구간을 드래그로 선택하세요</p>
-            </div>
-
-            <div className="text-center">
-              <div className="w-16 h-16 bg-pink-600 text-white rounded-2xl flex items-center justify-center text-2xl font-bold mx-auto mb-4">
-                3
-              </div>
-              <h3 className="text-xl font-semibold mb-2">녹음 & 비교</h3>
-              <p className="text-gray-600">녹음하고 원곡과 비교하며 실력을 키우세요</p>
-            </div>
+            ))}
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* Benefits */}
-      <div className="py-20 bg-white">
-        <div className="max-w-4xl mx-auto px-4">
-          <div className="bg-gradient-to-br from-blue-600 to-purple-600 rounded-3xl p-8 md:p-12 text-white">
-            <div className="text-center mb-8">
-              <h2 className="text-3xl font-bold mb-4">지금 바로 시작하세요</h2>
-              <p className="text-blue-100">복잡한 가입 절차 없이 바로 사용할 수 있습니다</p>
+      {/* Benefits CTA */}
+      <section className="py-24 px-6">
+        <div className="max-w-4xl mx-auto">
+          <div className="bg-primary text-primary-foreground rounded-2xl p-10 md:p-14">
+            <div className="text-center mb-10">
+              <h2 className="font-serif text-3xl md:text-4xl font-bold mb-4">지금 바로 시작하세요</h2>
+              <p className="text-primary-foreground/70 text-lg">복잡한 가입 절차 없이 바로 사용할 수 있습니다</p>
             </div>
 
-            <div className="grid md:grid-cols-2 gap-4 mb-8">
+            <div className="grid md:grid-cols-2 gap-4 mb-10 max-w-2xl mx-auto">
               {benefits.map((benefit, idx) => (
                 <div key={idx} className="flex items-center gap-3">
-                  <div className="w-6 h-6 bg-white/20 rounded-full flex items-center justify-center flex-shrink-0">
-                    <Check className="w-4 h-4" />
+                  <div className="w-5 h-5 rounded-full bg-primary-foreground/20 flex items-center justify-center flex-shrink-0">
+                    <Check className="w-3 h-3" />
                   </div>
-                  <span>{benefit}</span>
+                  <span className="text-sm">{benefit}</span>
                 </div>
               ))}
             </div>
@@ -191,7 +185,7 @@ export default function LandingPage() {
             <div className="text-center">
               <button
                 onClick={goToApp}
-                className="inline-flex items-center gap-2 px-8 py-4 bg-white text-blue-600 rounded-xl font-semibold text-lg hover:bg-blue-50 transition-colors"
+                className="inline-flex items-center gap-3 px-8 py-4 bg-primary-foreground text-primary rounded-lg font-semibold text-base hover:opacity-90 transition-opacity"
               >
                 <Play className="w-5 h-5" />
                 무료로 체험하기
@@ -199,37 +193,38 @@ export default function LandingPage() {
             </div>
           </div>
         </div>
-      </div>
+      </section>
 
       {/* Mobile App Coming Soon */}
-      <div className="py-20 bg-gray-50">
-        <div className="max-w-4xl mx-auto px-4 text-center">
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-purple-100 rounded-full text-purple-700 text-sm font-medium mb-6">
-            <Smartphone className="w-4 h-4" />
+      <section className="py-24 px-6 bg-secondary/50 border-t border-border">
+        <div className="max-w-4xl mx-auto text-center">
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-accent/10 text-accent rounded-full text-sm font-medium mb-6">
             Coming Soon
           </div>
 
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+          <h2 className="font-serif text-3xl md:text-4xl font-bold text-foreground mb-4">
             모바일 앱 출시 예정
           </h2>
-          <p className="text-lg text-gray-600 mb-8">
-            iOS / Android 앱이 곧 출시됩니다.<br />
+          <p className="text-muted-foreground text-lg mb-10 max-w-lg mx-auto">
+            iOS / Android 앱이 곧 출시됩니다.
             알림을 신청하시면 출시 즉시 알려드립니다.
           </p>
 
           <button
             onClick={() => setShowNotification(true)}
-            className="inline-flex items-center gap-2 px-8 py-4 bg-purple-600 hover:bg-purple-700 text-white rounded-xl font-semibold text-lg transition-colors"
+            className="inline-flex items-center gap-3 px-8 py-4 bg-accent text-accent-foreground rounded-lg font-semibold text-base hover:opacity-90 transition-opacity"
           >
             <Smartphone className="w-5 h-5" />
             출시 알림 신청하기
           </button>
         </div>
-      </div>
+      </section>
 
       {/* Footer */}
-      <footer className="py-8 bg-gray-900 text-gray-400 text-center text-sm">
-        <p>Practix - 음악 연습의 새로운 기준</p>
+      <footer className="py-10 px-6 bg-card border-t border-border">
+        <div className="max-w-6xl mx-auto text-center">
+          <p className="text-muted-foreground text-sm">Practix - 음악 연습의 새로운 기준</p>
+        </div>
       </footer>
 
       {/* Modals */}

@@ -47,26 +47,53 @@ const PracticePageContent = memo(function PracticePageContent() {
     setActiveToolModal(tool);
   };
 
-
-  // Web style
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50 p-4">
-      <div className="max-w-4xl mx-auto">
-        <div className="bg-white rounded-2xl shadow-xl p-8">
-          <button onClick={onBack} className="text-purple-600 mb-4 flex items-center gap-2">
-            ← 뒤로
+    <div className="min-h-screen bg-background">
+      {/* Header */}
+      <header className="sticky top-0 z-40 bg-background/95 backdrop-blur-md border-b border-border">
+        <div className="max-w-4xl mx-auto px-6 py-4">
+          <button 
+            onClick={onBack} 
+            className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors mb-2"
+          >
+            <ChevronLeft className="w-4 h-4" />
+            뒤로
           </button>
-          <h1 className="text-2xl font-bold text-gray-800 mb-2">{currentSession?.name}</h1>
-          <p className="text-gray-600 mb-6">{currentSong?.name}</p>
-
-          <WaveformDisplay />
-
-          {audioBuffer && <GlobalMetronome />}
-
-          {audioBuffer && <SessionMeta />}
-          <SectionManager />
+          <div className="flex justify-between items-start">
+            <div>
+              <h1 className="text-xl font-bold text-foreground">{currentSession?.name}</h1>
+              <p className="text-sm text-muted-foreground">{currentSong?.name}</p>
+            </div>
+          </div>
         </div>
-      </div>
+      </header>
+
+      {/* Main Content */}
+      <main className="max-w-4xl mx-auto px-6 py-6 space-y-6">
+        {/* Waveform Card */}
+        <section className="bg-card border border-border rounded-xl p-6">
+          <WaveformDisplay />
+        </section>
+
+        {/* Metronome */}
+        {audioBuffer && (
+          <section className="bg-card border border-border rounded-xl p-6">
+            <GlobalMetronome />
+          </section>
+        )}
+
+        {/* Session Meta */}
+        {audioBuffer && (
+          <section className="bg-card border border-border rounded-xl p-6">
+            <SessionMeta />
+          </section>
+        )}
+
+        {/* Section Manager */}
+        <section className="bg-card border border-border rounded-xl p-6">
+          <SectionManager />
+        </section>
+      </main>
 
       {/* Recording controls (trim modal etc.) */}
       <RecordingControls />
@@ -89,23 +116,21 @@ function ToolLauncherButton({ icon, label, description, badge, isDark, onClick }
   return (
     <button
       onClick={onClick}
-      className={`w-full flex items-center gap-4 px-4 py-3.5 rounded-xl active:opacity-70 ${
-        isDark ? 'active:bg-gray-700' : 'active:bg-gray-50'
-      }`}
+      className="w-full flex items-center gap-4 px-4 py-3.5 rounded-xl active:opacity-70 hover:bg-secondary/50 transition-colors"
     >
-      <div className={`p-2 rounded-lg ${isDark ? 'bg-gray-700 text-purple-400' : 'bg-purple-50 text-purple-500'}`}>
+      <div className="p-2 rounded-lg bg-secondary text-foreground">
         {icon}
       </div>
       <div className="flex-1 text-left">
         <div className="flex items-center gap-2">
-          <span className={`text-sm font-medium ${isDark ? 'text-white' : 'text-gray-800'}`}>{label}</span>
+          <span className="text-sm font-medium text-foreground">{label}</span>
           {badge && (
-            <span className="text-[10px] px-1.5 py-0.5 rounded bg-purple-500/20 text-purple-500">{badge}</span>
+            <span className="text-[10px] px-1.5 py-0.5 rounded bg-accent/20 text-accent">{badge}</span>
           )}
         </div>
-        <span className={`text-xs ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>{description}</span>
+        <span className="text-xs text-muted-foreground">{description}</span>
       </div>
-      <ChevronLeft className={`w-4 h-4 rotate-180 ${isDark ? 'text-gray-600' : 'text-gray-300'}`} />
+      <ChevronLeft className="w-4 h-4 rotate-180 text-muted-foreground" />
     </button>
   );
 }
@@ -119,19 +144,19 @@ function ToolModalShell({ title, badge, onClose, children }: {
 }) {
   const { isDark } = usePracticeContext();
   return (
-    <div className={`fixed inset-0 z-50 flex flex-col ${isDark ? 'bg-gray-900' : 'bg-gray-100'}`}>
+    <div className="fixed inset-0 z-50 flex flex-col bg-background">
       {/* Header */}
-      <div className={`${isDark ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} border-b safe-top pb-3 px-5`}>
+      <div className="bg-card border-b border-border safe-top pb-3 px-5">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <h1 className={`text-lg font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>{title}</h1>
+            <h1 className="text-lg font-bold text-foreground">{title}</h1>
             {badge && (
-              <span className="text-[10px] px-1.5 py-0.5 rounded bg-purple-500/20 text-purple-500">{badge}</span>
+              <span className="text-[10px] px-1.5 py-0.5 rounded bg-accent/20 text-accent">{badge}</span>
             )}
           </div>
           <button
             onClick={onClose}
-            className={`p-2 rounded-lg active:opacity-70 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}
+            className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
@@ -152,7 +177,7 @@ const SheetMusicToolModal = memo(function SheetMusicToolModal({ onClose }: { onC
 
   return (
     <ToolModalShell title="악보" onClose={onClose}>
-      <div className={`${ctx.isDark ? 'bg-gray-800' : 'bg-white'} m-2 rounded-xl`}>
+      <div className="m-4 rounded-xl bg-card border border-border">
         <SheetMusicSection
           sheetMusic={ctx.resolvedSheetMusic}
           sections={ctx.sections}
@@ -173,15 +198,15 @@ const SheetMusicToolModal = memo(function SheetMusicToolModal({ onClose }: { onC
 
       {/* Sheet Music Editor Modal */}
       {showEditor && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-[60] p-4">
-          <div className={`${ctx.isDark ? 'bg-gray-800' : 'bg-white'} rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden flex flex-col`}>
-            <div className={`flex items-center justify-between p-4 border-b ${ctx.isDark ? 'border-gray-700' : 'border-gray-200'}`}>
-              <h2 className={`text-lg font-semibold ${ctx.isDark ? 'text-white' : 'text-gray-900'}`}>악보 편집</h2>
+        <div className="fixed inset-0 bg-foreground/50 flex items-center justify-center z-[60] p-4">
+          <div className="bg-card rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden flex flex-col border border-border">
+            <div className="flex items-center justify-between p-4 border-b border-border">
+              <h2 className="text-lg font-semibold text-foreground">악보 편집</h2>
               <button
                 onClick={() => setShowEditor(false)}
-                className={`p-1 rounded-lg ${ctx.isDark ? 'hover:bg-gray-700' : 'hover:bg-gray-100'}`}
+                className="p-1 rounded-lg hover:bg-secondary transition-colors"
               >
-                <span className={`text-2xl ${ctx.isDark ? 'text-gray-400' : 'text-gray-500'}`}>×</span>
+                <X className="w-5 h-5 text-muted-foreground" />
               </button>
             </div>
             <div className="flex-1 overflow-auto p-4">
@@ -192,10 +217,10 @@ const SheetMusicToolModal = memo(function SheetMusicToolModal({ onClose }: { onC
                 isDark={ctx.isDark}
               />
             </div>
-            <div className={`p-4 border-t ${ctx.isDark ? 'border-gray-700' : 'border-gray-200'}`}>
+            <div className="p-4 border-t border-border">
               <button
                 onClick={() => setShowEditor(false)}
-                className="w-full px-4 py-2.5 bg-purple-500 text-white rounded-lg font-medium active:bg-purple-600"
+                className="w-full px-4 py-2.5 bg-primary text-primary-foreground rounded-lg font-medium hover:opacity-90 transition-opacity"
               >
                 완료
               </button>
@@ -215,7 +240,7 @@ const PitchToolModal = memo(function PitchToolModal({ onClose }: { onClose: () =
 
   return (
     <ToolModalShell title="피치 분석" badge="Beta" onClose={onClose}>
-      <div className={`${ctx.isDark ? 'bg-gray-800' : 'bg-white'} m-2 rounded-xl`}>
+      <div className="m-4 rounded-xl bg-card border border-border">
         <PitchComparisonSection
           isExpanded={true}
           onToggleExpand={() => {}}
@@ -261,7 +286,7 @@ const AudioDevicesToolModal = memo(function AudioDevicesToolModal({ onClose }: {
 
   return (
     <ToolModalShell title="오디오 기기" onClose={onClose}>
-      <div className={`${ctx.isDark ? 'bg-gray-800' : 'bg-white'} m-2 rounded-xl p-4`}>
+      <div className="m-4 rounded-xl bg-card border border-border p-4">
         <AudioDeviceSelector
           inputDevices={audioDevices.inputDevices}
           outputDevices={audioDevices.outputDevices}
@@ -307,43 +332,39 @@ function NewDevicePromptModal({
   // Deduplicate (same physical device may appear as both input and output)
   const uniqueNames = newDeviceNames.filter((name, i) => newDeviceNames.indexOf(name) === i);
 
-  const selectClass = `w-full px-3 py-2 text-sm rounded-lg border ${
-    isDark ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300 text-gray-800'
-  }`;
-
   return (
     <div className="fixed inset-0 z-50" onClick={onDismiss}>
-      <div className="absolute inset-0 bg-black/40" />
+      <div className="absolute inset-0 bg-foreground/40" />
       <div
-        className={`absolute bottom-0 left-0 right-0 ${isDark ? 'bg-gray-800' : 'bg-white'} rounded-t-2xl`}
+        className="absolute bottom-0 left-0 right-0 bg-card rounded-t-2xl border-t border-border"
         style={{ paddingBottom: 'calc(1rem + var(--sab, 0px))' }}
         onClick={(e) => e.stopPropagation()}
       >
         {/* Handle bar */}
         <div className="flex justify-center pt-3 pb-2">
-          <div className={`w-10 h-1 rounded-full ${isDark ? 'bg-gray-600' : 'bg-gray-300'}`} />
+          <div className="w-10 h-1 rounded-full bg-border" />
         </div>
 
         <div className="px-5 pb-4">
           {/* Title */}
-          <h3 className={`text-sm font-semibold mb-1 ${isDark ? 'text-white' : 'text-gray-900'}`}>
+          <h3 className="text-sm font-semibold mb-1 text-foreground">
             새 오디오 기기 감지
           </h3>
-          <p className={`text-xs mb-4 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
+          <p className="text-xs mb-4 text-muted-foreground">
             {uniqueNames.join(', ')}
           </p>
 
           {/* Output selector */}
           {prompt.newOutputs.length > 0 && (
             <div className="mb-3">
-              <label className={`flex items-center gap-1.5 text-xs font-medium mb-1 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
+              <label className="flex items-center gap-1.5 text-xs font-medium mb-1 text-muted-foreground">
                 <Volume2 className="w-3.5 h-3.5" />
                 재생 기기
               </label>
               <select
                 value={selectedOutputId}
                 onChange={(e) => onOutputChange(e.target.value)}
-                className={selectClass}
+                className="w-full px-3 py-2 text-sm rounded-lg border bg-background border-border text-foreground"
               >
                 <option value="default">기본 스피커</option>
                 {outputDevices.map((d) => (
@@ -356,14 +377,14 @@ function NewDevicePromptModal({
           {/* Input selector */}
           {prompt.newInputs.length > 0 && (
             <div className="mb-4">
-              <label className={`flex items-center gap-1.5 text-xs font-medium mb-1 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
+              <label className="flex items-center gap-1.5 text-xs font-medium mb-1 text-muted-foreground">
                 <Mic className="w-3.5 h-3.5" />
                 녹음 기기
               </label>
               <select
                 value={selectedInputId}
                 onChange={(e) => onInputChange(e.target.value)}
-                className={selectClass}
+                className="w-full px-3 py-2 text-sm rounded-lg border bg-background border-border text-foreground"
               >
                 <option value="default">기본 마이크</option>
                 {inputDevices.map((d) => (
@@ -377,9 +398,7 @@ function NewDevicePromptModal({
           <div className="flex gap-2">
             <button
               onClick={onDismiss}
-              className={`flex-1 py-2.5 rounded-lg text-sm font-medium ${
-                isDark ? 'bg-gray-700 text-gray-300 active:bg-gray-600' : 'bg-gray-100 text-gray-600 active:bg-gray-200'
-              }`}
+              className="flex-1 py-2.5 rounded-lg text-sm font-medium bg-secondary text-secondary-foreground hover:bg-secondary/80 transition-colors"
             >
               닫기
             </button>
@@ -394,7 +413,7 @@ function NewDevicePromptModal({
                 }
                 onDismiss();
               }}
-              className="flex-1 py-2.5 rounded-lg text-sm font-medium bg-blue-500 text-white active:bg-blue-600"
+              className="flex-1 py-2.5 rounded-lg text-sm font-medium bg-accent text-accent-foreground hover:opacity-90 transition-opacity"
             >
               새 기기로 변경
             </button>

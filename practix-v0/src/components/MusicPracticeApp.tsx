@@ -419,29 +419,27 @@ export default function MusicPracticeApp({ onShowTutorial }: MusicPracticeAppPro
     if (!showPermissionDialog) return null;
 
     return (
-      <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
-        <div className={`${isDark ? 'bg-gray-800' : 'bg-white'} rounded-2xl p-6 max-w-sm w-full`}>
-          <h3 className={`text-lg font-semibold ${isDark ? 'text-white' : 'text-gray-900'} mb-3`}>
+      <div className="fixed inset-0 bg-foreground/50 flex items-center justify-center z-50 p-4">
+        <div className="bg-card border border-border rounded-xl p-6 max-w-sm w-full">
+          <h3 className="text-lg font-semibold text-foreground mb-3">
             파일 접근 권한
           </h3>
-          <p className={`text-sm ${isDark ? 'text-gray-300' : 'text-gray-600'} mb-4`}>
+          <p className="text-sm text-muted-foreground mb-4">
             녹음 파일을 앱 삭제 후에도 유지하려면 "모든 파일 액세스" 권한이 필요합니다.
           </p>
-          <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-500'} mb-4`}>
+          <p className="text-xs text-muted-foreground mb-4">
             권한을 허용하지 않아도 앱은 사용 가능하지만, 앱 삭제 시 녹음 파일이 함께 삭제됩니다.
           </p>
           <div className="flex gap-3">
             <button
               onClick={() => setShowPermissionDialog(false)}
-              className={`flex-1 px-4 py-2.5 rounded-lg font-medium transition-colors ${
-                isDark ? 'bg-gray-700 hover:bg-gray-600 text-gray-200' : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
-              }`}
+              className="flex-1 px-4 py-2.5 rounded-lg font-medium transition-colors bg-secondary hover:bg-secondary/80 text-secondary-foreground"
             >
               나중에
             </button>
             <button
               onClick={openStorageSettings}
-              className="flex-1 px-4 py-2.5 bg-purple-500 hover:bg-purple-600 text-white rounded-lg font-medium transition-colors"
+              className="flex-1 px-4 py-2.5 bg-accent hover:opacity-90 text-accent-foreground rounded-lg font-medium transition-opacity"
             >
               설정 열기
             </button>
@@ -458,11 +456,11 @@ export default function MusicPracticeApp({ onShowTutorial }: MusicPracticeAppPro
     return (
       <button
         onClick={onShowTutorial}
-        className="fixed left-4 z-40 flex items-center gap-2 px-4 py-2 bg-white rounded-full shadow-lg border border-gray-200 hover:bg-gray-50 transition-all"
+        className="fixed left-4 z-40 flex items-center gap-2 px-4 py-2 bg-card rounded-full shadow-lg border border-border hover:bg-secondary transition-all"
         style={{ bottom: 'calc(1rem + var(--sab, 0px))' }}
       >
-        <HelpCircle className="w-4 h-4 text-blue-500" />
-        <span className="text-sm text-gray-600">도움말</span>
+        <HelpCircle className="w-4 h-4 text-accent" />
+        <span className="text-sm text-muted-foreground">도움말</span>
       </button>
     );
   };
@@ -472,7 +470,7 @@ export default function MusicPracticeApp({ onShowTutorial }: MusicPracticeAppPro
     if (!showExitToast) return null;
 
     return (
-      <div className="fixed left-1/2 -translate-x-1/2 z-50 px-4 py-2 bg-gray-800 text-white text-sm rounded-lg shadow-lg transition-opacity" style={{ bottom: 'calc(5rem + var(--sab, 0px))' }}>
+      <div className="fixed left-1/2 -translate-x-1/2 z-50 px-4 py-2 bg-primary text-primary-foreground text-sm rounded-lg shadow-lg transition-opacity" style={{ bottom: 'calc(5rem + var(--sab, 0px))' }}>
         한 번 더 누르면 앱을 종료합니다
       </div>
     );
@@ -483,9 +481,9 @@ export default function MusicPracticeApp({ onShowTutorial }: MusicPracticeAppPro
 
   if (page === 'metronome') {
     return (
-      <div className={`min-h-screen flex flex-col ${isDark ? 'bg-gray-900' : 'bg-gray-50'}`}>
-        <div className={`${isDark ? 'bg-gray-800' : 'bg-white'} safe-top pb-3 px-5 border-b ${isDark ? 'border-gray-700' : 'border-gray-200'}`}>
-          <h1 className={`text-xl font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>메트로놈</h1>
+      <div className="min-h-screen flex flex-col bg-background">
+        <div className="bg-card border-b border-border safe-top pb-3 px-5">
+          <h1 className="text-xl font-bold text-foreground">메트로놈</h1>
         </div>
         <MetronomePage isDark={isDark} />
         <div className="h-16" />
@@ -497,9 +495,9 @@ export default function MusicPracticeApp({ onShowTutorial }: MusicPracticeAppPro
 
   if (page === 'tuner') {
     return (
-      <div className={`min-h-screen flex flex-col ${isDark ? 'bg-gray-900' : 'bg-gray-50'}`}>
-        <div className={`${isDark ? 'bg-gray-800' : 'bg-white'} safe-top pb-3 px-5 border-b ${isDark ? 'border-gray-700' : 'border-gray-200'}`}>
-          <h1 className={`text-xl font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>튜너</h1>
+      <div className="min-h-screen flex flex-col bg-background">
+        <div className="bg-card border-b border-border safe-top pb-3 px-5">
+          <h1 className="text-xl font-bold text-foreground">튜너</h1>
         </div>
         <TunerPage isDark={isDark} />
         <div className="h-16" />
@@ -624,8 +622,8 @@ function NavTab({ icon, label, isActive, isDark, onClick }: {
       onClick={onClick}
       className={`flex-1 flex flex-col items-center py-2 ${
         isActive
-          ? 'text-purple-500'
-          : isDark ? 'text-gray-500' : 'text-gray-400'
+          ? 'text-accent'
+          : 'text-muted-foreground'
       }`}
     >
       <span className="text-lg">{icon}</span>

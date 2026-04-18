@@ -41,7 +41,6 @@ export default function MetronomePage({ isDark }: MetronomePageProps) {
   const handleTapTempo = useCallback(() => {
     const now = performance.now();
     const taps = tapTimesRef.current;
-    // 2초 이상 간격이면 리셋
     if (taps.length > 0 && now - taps[taps.length - 1] > 2000) {
       tapTimesRef.current = [];
     }
@@ -77,7 +76,6 @@ export default function MetronomePage({ isDark }: MetronomePageProps) {
     });
   }, []);
 
-  // BPM 변경 시 재생 중이면 재시작
   useEffect(() => {
     if (isPlaying) {
       stopMetronome();
@@ -90,7 +88,6 @@ export default function MetronomePage({ isDark }: MetronomePageProps) {
     setAccentBeat(beat);
   }, [setAccentBeat]);
 
-  // BPM input 처리
   const handleBpmInputBlur = () => {
     const parsed = parseInt(bpmInput);
     if (parsed >= 40 && parsed <= 240) {
@@ -100,7 +97,6 @@ export default function MetronomePage({ isDark }: MetronomePageProps) {
     }
   };
 
-  // Long press for continuous increment/decrement
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const startLongPress = (delta: number) => {
     adjustBpm(delta);
@@ -114,7 +110,7 @@ export default function MetronomePage({ isDark }: MetronomePageProps) {
   };
 
   return (
-    <div className={`flex-1 flex flex-col items-center justify-center px-6 ${isDark ? 'bg-gray-900' : 'bg-gray-50'}`}>
+    <div className="flex-1 flex flex-col items-center justify-center px-6 bg-background">
       {/* Beat indicator */}
       <div className="mb-8">
         <MetronomeBeatIndicator
@@ -132,10 +128,10 @@ export default function MetronomePage({ isDark }: MetronomePageProps) {
               <button
                 key={i}
                 onClick={() => handleAccentBeatChange(i + 1)}
-                className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
+                className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-colors ${
                   accentBeat === i + 1
-                    ? 'bg-green-200 text-green-700 ring-2 ring-green-400'
-                    : isDark ? 'bg-gray-700 text-gray-400' : 'bg-gray-200 text-gray-500'
+                    ? 'bg-success/20 text-success ring-2 ring-success'
+                    : 'bg-secondary text-muted-foreground'
                 }`}
               >
                 {i + 1}
@@ -153,9 +149,7 @@ export default function MetronomePage({ isDark }: MetronomePageProps) {
           onMouseLeave={stopLongPress}
           onTouchStart={() => startLongPress(-1)}
           onTouchEnd={stopLongPress}
-          className={`w-12 h-12 rounded-full flex items-center justify-center ${
-            isDark ? 'bg-gray-700 text-white active:bg-gray-600' : 'bg-gray-200 text-gray-700 active:bg-gray-300'
-          }`}
+          className="w-12 h-12 rounded-full flex items-center justify-center bg-secondary text-foreground hover:bg-secondary/80 active:scale-95 transition-all"
         >
           <Minus className="w-5 h-5" />
         </button>
@@ -169,11 +163,9 @@ export default function MetronomePage({ isDark }: MetronomePageProps) {
             onChange={(e) => setBpmInput(e.target.value)}
             onBlur={handleBpmInputBlur}
             onKeyDown={(e) => e.key === 'Enter' && e.currentTarget.blur()}
-            className={`text-6xl font-bold text-center w-36 bg-transparent outline-none ${
-              isDark ? 'text-white' : 'text-gray-900'
-            }`}
+            className="text-6xl font-bold text-center w-36 bg-transparent outline-none text-foreground"
           />
-          <p className={`text-sm ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>BPM</p>
+          <p className="text-sm text-muted-foreground">BPM</p>
         </div>
 
         <button
@@ -182,9 +174,7 @@ export default function MetronomePage({ isDark }: MetronomePageProps) {
           onMouseLeave={stopLongPress}
           onTouchStart={() => startLongPress(1)}
           onTouchEnd={stopLongPress}
-          className={`w-12 h-12 rounded-full flex items-center justify-center ${
-            isDark ? 'bg-gray-700 text-white active:bg-gray-600' : 'bg-gray-200 text-gray-700 active:bg-gray-300'
-          }`}
+          className="w-12 h-12 rounded-full flex items-center justify-center bg-secondary text-foreground hover:bg-secondary/80 active:scale-95 transition-all"
         >
           <Plus className="w-5 h-5" />
         </button>
@@ -199,10 +189,10 @@ export default function MetronomePage({ isDark }: MetronomePageProps) {
               setTimeSignature(ts);
               setAccentBeatState(1);
             }}
-            className={`px-3 py-2 rounded-lg text-sm font-medium ${
+            className={`px-4 py-2.5 rounded-lg text-sm font-medium transition-colors ${
               timeSignature === ts
-                ? 'bg-green-500 text-white'
-                : isDark ? 'bg-gray-700 text-gray-300' : 'bg-gray-200 text-gray-600'
+                ? 'bg-success text-success-foreground'
+                : 'bg-secondary text-secondary-foreground hover:bg-secondary/80'
             }`}
           >
             {ts}
@@ -213,9 +203,7 @@ export default function MetronomePage({ isDark }: MetronomePageProps) {
       {/* Tap tempo */}
       <button
         onClick={handleTapTempo}
-        className={`px-6 py-3 rounded-xl text-sm font-medium mb-6 ${
-          isDark ? 'bg-gray-700 text-gray-300 active:bg-gray-600' : 'bg-gray-200 text-gray-600 active:bg-gray-300'
-        }`}
+        className="px-6 py-3 rounded-xl text-sm font-medium mb-6 bg-secondary text-secondary-foreground hover:bg-secondary/80 active:scale-95 transition-all"
       >
         탭 템포 {tapCount >= 3 ? `(${tapCount}회)` : ''}
       </button>
@@ -223,7 +211,7 @@ export default function MetronomePage({ isDark }: MetronomePageProps) {
       {/* Volume */}
       <div className="w-full max-w-xs mb-8">
         <div className="flex items-center gap-3">
-          <span className={`text-xs ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>볼륨</span>
+          <span className="text-xs text-muted-foreground">볼륨</span>
           <input
             type="range"
             min="0"
@@ -231,9 +219,9 @@ export default function MetronomePage({ isDark }: MetronomePageProps) {
             step="0.05"
             value={volume}
             onChange={(e) => setVolume(parseFloat(e.target.value))}
-            className="flex-1 accent-green-500"
+            className="flex-1 accent-success"
           />
-          <span className={`text-xs w-8 text-right ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>
+          <span className="text-xs w-8 text-right text-muted-foreground">
             {Math.round(volume * 100)}
           </span>
         </div>
@@ -242,16 +230,16 @@ export default function MetronomePage({ isDark }: MetronomePageProps) {
       {/* Play/Stop button */}
       <button
         onClick={handleToggle}
-        className={`w-24 h-24 rounded-full flex items-center justify-center shadow-lg ${
+        className={`w-24 h-24 rounded-full flex items-center justify-center shadow-lg active:scale-95 transition-all ${
           isPlaying
-            ? 'bg-red-500 active:bg-red-600'
-            : 'bg-green-500 active:bg-green-600'
+            ? 'bg-destructive hover:bg-destructive/90'
+            : 'bg-success hover:bg-success/90'
         }`}
       >
         {isPlaying ? (
-          <div className="w-8 h-8 bg-white rounded-sm" />
+          <div className="w-8 h-8 bg-destructive-foreground rounded-sm" />
         ) : (
-          <div className="w-0 h-0 border-l-[20px] border-l-white border-t-[14px] border-t-transparent border-b-[14px] border-b-transparent ml-2" />
+          <div className="w-0 h-0 border-l-[20px] border-l-success-foreground border-t-[14px] border-t-transparent border-b-[14px] border-b-transparent ml-2" />
         )}
       </button>
     </div>

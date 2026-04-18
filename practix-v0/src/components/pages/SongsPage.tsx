@@ -1,14 +1,11 @@
 'use client';
 
 import { useState } from 'react';
-import { Plus, ChevronRight, Trash2, Moon, Sun, BarChart3, Menu, Settings, RotateCcw } from 'lucide-react';
+import { Plus, ChevronRight, Trash2, BarChart3, Music } from 'lucide-react';
 import { Song, TrashedRecording } from '@/types';
 import Modal from '@/components/modals/Modal';
 import ConfirmModal from '@/components/modals/ConfirmModal';
-import DrawerMenu from '@/components/ui/DrawerMenu';
-import GlobalTrashView from '@/components/trash/GlobalTrashView';
 import { useTheme } from '@/hooks/useTheme';
-import { useDialogPreferences } from '@/hooks/useDialogPreferences';
 
 interface SongsPageProps {
   songs: Song[];
@@ -52,66 +49,90 @@ export default function SongsPage({
   onPermanentDelete,
   onEmptyTrash,
 }: SongsPageProps) {
-  const { isDark, toggleTheme } = useTheme();
-  const { preferences, updatePreference, resetAllConfirmations } = useDialogPreferences();
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const { isDark } = useTheme();
 
-  // Check if any confirmations are currently disabled
-  const hasDisabledConfirmations = preferences.skipTrashRestoreConfirm || preferences.skipTrashDeleteConfirm;
-
-  // Native mobile style
-
-  // Web style (original)
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50 p-2 sm:p-4">
-      <div className="max-w-2xl mx-auto">
-        <div className="bg-white rounded-2xl shadow-xl p-4 sm:p-8">
-          <div className="flex justify-between items-center mb-4 sm:mb-6 gap-2">
-            <h1 className="text-xl sm:text-3xl font-bold text-gray-800 whitespace-nowrap">🎵 내 곡 목록</h1>
-            <div className="flex items-center gap-2">
-              {onShowStats && (
-                <button
-                  onClick={onShowStats}
-                  className="bg-gray-100 hover:bg-gray-200 text-purple-600 px-3 sm:px-4 py-2 rounded-lg flex items-center gap-1 sm:gap-2 whitespace-nowrap flex-shrink-0"
-                >
-                  <BarChart3 className="w-4 h-4 sm:w-5 sm:h-5" /><span className="hidden sm:inline">통계</span>
-                </button>
-              )}
-              <button
-                onClick={() => onShowAddSong(true)}
-                className="bg-purple-500 hover:bg-purple-600 text-white px-3 sm:px-4 py-2 rounded-lg flex items-center gap-1 sm:gap-2 whitespace-nowrap flex-shrink-0"
-              >
-                <Plus className="w-4 h-4 sm:w-5 sm:h-5" /><span>곡 추가</span>
-              </button>
-            </div>
+    <div className="min-h-screen bg-background">
+      {/* Header */}
+      <header className="sticky top-0 z-40 bg-background/95 backdrop-blur-md border-b border-border">
+        <div className="max-w-3xl mx-auto px-6 py-5 flex justify-between items-center">
+          <div>
+            <h1 className="text-2xl font-bold text-foreground">내 곡 목록</h1>
+            <p className="text-sm text-muted-foreground mt-0.5">{songs.length}개의 곡</p>
           </div>
-          <div className="space-y-2 sm:space-y-3">
+          <div className="flex items-center gap-3">
+            {onShowStats && (
+              <button
+                onClick={onShowStats}
+                className="p-2.5 rounded-lg bg-secondary text-secondary-foreground hover:bg-secondary/80 transition-colors"
+                aria-label="통계"
+              >
+                <BarChart3 className="w-5 h-5" />
+              </button>
+            )}
+            <button
+              onClick={() => onShowAddSong(true)}
+              className="flex items-center gap-2 px-4 py-2.5 bg-primary text-primary-foreground rounded-lg font-medium text-sm hover:opacity-90 transition-opacity"
+            >
+              <Plus className="w-4 h-4" />
+              <span>곡 추가</span>
+            </button>
+          </div>
+        </div>
+      </header>
+
+      {/* Content */}
+      <main className="max-w-3xl mx-auto px-6 py-8">
+        {songs.length === 0 ? (
+          <div className="text-center py-20">
+            <div className="w-16 h-16 rounded-full bg-secondary flex items-center justify-center mx-auto mb-6">
+              <Music className="w-8 h-8 text-muted-foreground" />
+            </div>
+            <h3 className="text-lg font-semibold text-foreground mb-2">아직 곡이 없습니다</h3>
+            <p className="text-muted-foreground mb-6">첫 번째 곡을 추가해 연습을 시작하세요</p>
+            <button
+              onClick={() => onShowAddSong(true)}
+              className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-lg font-medium hover:opacity-90 transition-opacity"
+            >
+              <Plus className="w-4 h-4" />
+              곡 추가하기
+            </button>
+          </div>
+        ) : (
+          <div className="space-y-3">
             {songs.map((song) => (
-              <div key={song.id} className="relative group">
+              <div key={song.id} className="group relative">
                 <button
                   onClick={() => onSelectSong(song)}
-                  className="w-full bg-gradient-to-r from-purple-50 to-blue-50 hover:from-purple-100 hover:to-blue-100 p-4 sm:p-6 rounded-xl flex justify-between items-center transition"
+                  className="w-full bg-card border border-border hover:border-foreground/20 rounded-xl p-5 flex justify-between items-center transition-all"
                 >
-                  <div className="text-left flex-1 min-w-0">
-                    <h3 className="font-semibold text-gray-800 text-base sm:text-lg truncate">{song.name}</h3>
-                    <p className="text-xs sm:text-sm text-gray-600">{song.sessions.length}개의 연습</p>
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-lg bg-secondary flex items-center justify-center flex-shrink-0">
+                      <Music className="w-5 h-5 text-muted-foreground" />
+                    </div>
+                    <div className="text-left">
+                      <h3 className="font-semibold text-foreground text-base">{song.name}</h3>
+                      <p className="text-sm text-muted-foreground mt-0.5">{song.sessions.length}개의 연습 세션</p>
+                    </div>
                   </div>
-                  <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6 text-gray-400 flex-shrink-0 ml-2" />
+                  <ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-foreground transition-colors" />
                 </button>
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
                     onDeleteSong(song.id);
                   }}
-                  className="absolute top-3 right-12 sm:top-4 sm:right-14 opacity-0 group-hover:opacity-100 transition bg-red-500 hover:bg-red-600 text-white p-2 rounded-lg"
+                  className="absolute top-1/2 -translate-y-1/2 right-14 opacity-0 group-hover:opacity-100 transition-all p-2 rounded-lg bg-destructive/10 text-destructive hover:bg-destructive hover:text-destructive-foreground"
+                  aria-label="삭제"
                 >
                   <Trash2 className="w-4 h-4" />
                 </button>
               </div>
             ))}
           </div>
-        </div>
-      </div>
+        )}
+      </main>
+
       <Modal
         show={showAddSong}
         onClose={() => {

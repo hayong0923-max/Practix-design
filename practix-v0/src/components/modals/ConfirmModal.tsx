@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useTheme } from '@/hooks/useTheme';
+import { AlertTriangle } from 'lucide-react';
 
 interface ConfirmModalProps {
   show: boolean;
@@ -24,15 +24,14 @@ export default function ConfirmModal({
   showDontAskAgain = false,
   onDontAskAgainChange,
 }: ConfirmModalProps) {
-  const { isDark } = useTheme();
   const [dontAskAgain, setDontAskAgain] = useState(false);
 
   if (!show) return null;
 
   const colorClasses = {
-    red: 'bg-red-500 hover:bg-red-600 active:bg-red-700',
-    green: 'bg-green-500 hover:bg-green-600 active:bg-green-700',
-    purple: 'bg-purple-500 hover:bg-purple-600 active:bg-purple-700',
+    red: 'bg-destructive hover:bg-destructive/90 text-destructive-foreground',
+    green: 'bg-success hover:bg-success/90 text-success-foreground',
+    purple: 'bg-accent hover:bg-accent/90 text-accent-foreground',
   };
 
   const handleConfirm = () => {
@@ -43,18 +42,25 @@ export default function ConfirmModal({
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className={`${isDark ? 'bg-gray-800' : 'bg-white'} rounded-2xl p-6 w-96 max-w-full mx-4`}>
-        <h2 className={`text-xl font-bold ${isDark ? 'text-white' : 'text-gray-800'} mb-4`}>확인</h2>
-        <p className={`${isDark ? 'text-gray-300' : 'text-gray-700'} mb-4`}>{message}</p>
+    <div className="fixed inset-0 bg-foreground/50 flex items-center justify-center z-50 p-4">
+      <div className="bg-card border border-border rounded-xl p-6 w-full max-w-md animate-scale-in">
+        <div className="flex items-start gap-4 mb-5">
+          <div className="w-10 h-10 rounded-full bg-destructive/10 flex items-center justify-center flex-shrink-0">
+            <AlertTriangle className="w-5 h-5 text-destructive" />
+          </div>
+          <div>
+            <h2 className="text-lg font-semibold text-foreground mb-1">확인</h2>
+            <p className="text-muted-foreground text-sm">{message}</p>
+          </div>
+        </div>
 
         {showDontAskAgain && (
-          <label className={`flex items-center gap-2 mb-4 cursor-pointer ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+          <label className="flex items-center gap-2 mb-5 cursor-pointer text-muted-foreground">
             <input
               type="checkbox"
               checked={dontAskAgain}
               onChange={(e) => setDontAskAgain(e.target.checked)}
-              className="w-4 h-4 rounded border-gray-300 text-purple-500 focus:ring-purple-500"
+              className="w-4 h-4 rounded border-border bg-background text-accent focus:ring-ring"
             />
             <span className="text-sm">다시 표시하지 않기</span>
           </label>
@@ -63,13 +69,13 @@ export default function ConfirmModal({
         <div className="flex gap-3">
           <button
             onClick={onCancel}
-            className={`flex-1 ${isDark ? 'bg-gray-700 hover:bg-gray-600 text-gray-200' : 'bg-gray-200 hover:bg-gray-300 text-gray-700'} py-2 rounded-lg`}
+            className="flex-1 bg-secondary hover:bg-secondary/80 text-secondary-foreground py-2.5 rounded-lg font-medium transition-colors"
           >
             취소
           </button>
           <button
             onClick={handleConfirm}
-            className={`flex-1 ${colorClasses[confirmColor]} text-white py-2 rounded-lg`}
+            className={`flex-1 ${colorClasses[confirmColor]} py-2.5 rounded-lg font-medium transition-opacity`}
           >
             {confirmText}
           </button>
