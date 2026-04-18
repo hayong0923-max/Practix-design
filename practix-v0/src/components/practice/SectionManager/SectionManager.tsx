@@ -1,6 +1,7 @@
 'use client';
 
 import React, { memo, useEffect } from 'react';
+import { List, Plus } from 'lucide-react';
 import { usePracticeContext } from '@/contexts/PracticeContext';
 import { useSections } from './useSections';
 import { registerBackButtonCloser } from '@/hooks/useBackButton';
@@ -44,64 +45,88 @@ const SectionManager = memo(function SectionManager() {
     return unregister;
   }, [sec.showSyncEdit]);
 
-  if (!ctx.audioBuffer && ctx.sections.length === 0) return null;
+  // Empty state when no audio buffer
+  if (!ctx.audioBuffer && ctx.sections.length === 0) {
+    return (
+      <div className={`flex flex-col items-center justify-center py-16 px-4 ${ctx.isDark ? 'text-gray-400' : 'text-gray-500'}`}>
+        <List className="w-12 h-12 mb-4 opacity-30" />
+        <p className="text-base font-medium mb-1">구간이 없습니다</p>
+        <p className="text-sm text-center">오디오 파일을 업로드하고 파형에서 구간을 선택하세요</p>
+      </div>
+    );
+  }
+
+  // Empty state when audio exists but no sections
+  if (ctx.audioBuffer && ctx.sections.length === 0) {
+    return (
+      <div className={`flex flex-col items-center justify-center py-16 px-4 ${ctx.isDark ? 'text-gray-400' : 'text-gray-500'}`}>
+        <Plus className="w-12 h-12 mb-4 opacity-30" />
+        <p className="text-base font-medium mb-1">구간을 만들어보세요</p>
+        <p className="text-sm text-center">파형에서 + 버튼을 누르고 드래그하여 구간을 선택하세요</p>
+      </div>
+    );
+  }
 
   return (
     <>
       {/* Section list */}
-      <div className="space-y-4">
-        <h3 className="font-semibold text-gray-800">구간 목록</h3>
-        <div>
+      <div className={`${ctx.isDark ? 'bg-gray-800' : 'bg-white'} mx-2 mt-2 rounded-xl overflow-hidden`}>
+        <div className={`px-4 py-3 border-b ${ctx.isDark ? 'border-gray-700' : 'border-gray-100'}`}>
+          <h3 className={`font-semibold text-sm ${ctx.isDark ? 'text-white' : 'text-gray-800'}`}>
+            구간 목록 ({ctx.sections.length}개)
+          </h3>
+        </div>
+        <div className="divide-y divide-gray-100 dark:divide-gray-700">
           {ctx.sections.map((section, idx) => (
-              <SectionCard
-                key={section.id}
-                section={section}
-                index={idx}
-                onDelete={() => sec.deleteSection(section.id)}
-                onPlaySection={() => sec.playSection(section)}
-                onOpenPractice={() => {
-                  ctx.stopPlayback();
-                  sec.setPracticingSection(section);
-                  sec.setPracticingSectionIndex(idx);
-                }}
-                onUploadRecording={(e) => sec.handleRecordedFileUpload(e, section)}
-                isUploading={sec.uploadingSectionId === section.id}
-                recordingState={{
-                  isRecording: ctx.isRecording && sec.recordingSectionId === section.id,
-                  isCountingDown: ctx.isCountingDown && sec.recordingSectionId === section.id,
-                  countdown: ctx.countdown,
-                  recordingTime: ctx.recordingTime,
-                  audioLevel: sec.recordingSectionId === section.id ? ctx.audioLevel : 0,
-                  error: sec.recordingSectionId === section.id ? ctx.recordingError : null,
-                }}
-                recordingActions={{
-                  onStartRecording: (countdownSeconds, withBackingTrack) =>
-                    sec.handleStartRecording(section, countdownSeconds, withBackingTrack),
-                  onStopRecording: () => sec.handleStopRecording(section),
-                  onCancelCountdown: ctx.cancelCountdown,
-                }}
-                hasBackingTrack={!!section.backingTrack}
-                editingMemo={sec.editingMemo}
-                onEditMemo={() => sec.setEditingMemo(section.id)}
-                onSaveMemo={(memo) => sec.saveMemo(section, memo)}
-                loopControls={{
-                  isLooping: ctx.isLooping,
-                  onLoopToggle: () => ctx.setIsLooping((prev) => !prev),
-                }}
-                countdownSettings={{
-                  countdownDuration: ctx.countdownDuration,
-                  onCountdownDurationChange: ctx.handleCountdownDurationChange,
-                }}
-                recordingsCount={section.recordedFiles?.length || 0}
-                onDragStart={sec.handleDragStart}
-                onDragOver={sec.handleDragOver}
-                onDragEnd={sec.handleDragEnd}
-                isDragging={sec.draggedSectionIndex === idx}
-                isDragOver={sec.dragOverSectionIndex === idx}
-                isNew={ctx.newSectionIds.has(section.id)}
-                onClearNewHighlight={() => ctx.clearNewHighlight(section.id)}
-              />
-            ))}
+            <SectionCard
+              key={section.id}
+              section={section}
+              index={idx}
+              onDelete={() => sec.deleteSection(section.id)}
+              onPlaySection={() => sec.playSection(section)}
+              onOpenPractice={() => {
+                ctx.stopPlayback();
+                sec.setPracticingSection(section);
+                sec.setPracticingSectionIndex(idx);
+              }}
+              onUploadRecording={(e) => sec.handleRecordedFileUpload(e, section)}
+              isUploading={sec.uploadingSectionId === section.id}
+              recordingState={{
+                isRecording: ctx.isRecording && sec.recordingSectionId === section.id,
+                isCountingDown: ctx.isCountingDown && sec.recordingSectionId === section.id,
+                countdown: ctx.countdown,
+                recordingTime: ctx.recordingTime,
+                audioLevel: sec.recordingSectionId === section.id ? ctx.audioLevel : 0,
+                error: sec.recordingSectionId === section.id ? ctx.recordingError : null,
+              }}
+              recordingActions={{
+                onStartRecording: (countdownSeconds, withBackingTrack) =>
+                  sec.handleStartRecording(section, countdownSeconds, withBackingTrack),
+                onStopRecording: () => sec.handleStopRecording(section),
+                onCancelCountdown: ctx.cancelCountdown,
+              }}
+              hasBackingTrack={!!section.backingTrack}
+              editingMemo={sec.editingMemo}
+              onEditMemo={() => sec.setEditingMemo(section.id)}
+              onSaveMemo={(memo) => sec.saveMemo(section, memo)}
+              loopControls={{
+                isLooping: ctx.isLooping,
+                onLoopToggle: () => ctx.setIsLooping((prev) => !prev),
+              }}
+              countdownSettings={{
+                countdownDuration: ctx.countdownDuration,
+                onCountdownDurationChange: ctx.handleCountdownDurationChange,
+              }}
+              recordingsCount={section.recordedFiles?.length || 0}
+              onDragStart={sec.handleDragStart}
+              onDragOver={sec.handleDragOver}
+              onDragEnd={sec.handleDragEnd}
+              isDragging={sec.draggedSectionIndex === idx}
+              isDragOver={sec.dragOverSectionIndex === idx}
+              isNew={ctx.newSectionIds.has(section.id)}
+              onClearNewHighlight={() => ctx.clearNewHighlight(section.id)}
+            />
+          ))}
         </div>
       </div>
 

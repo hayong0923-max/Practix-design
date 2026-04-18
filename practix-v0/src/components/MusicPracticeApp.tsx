@@ -11,15 +11,34 @@ import SongsPage from '@/components/pages/SongsPage';
 import SessionsPage from '@/components/pages/SessionsPage';
 import PracticePage from '@/components/pages/PracticePage';
 import StatsPage from '@/components/pages/StatsPage';
-import MetronomePage from '@/components/pages/MetronomePage';
-import TunerPage from '@/components/pages/TunerPage';
 import { saveAudio } from '@/lib/audioStorage';
 
-type Page = 'songs' | 'sessions' | 'practice' | 'stats' | 'metronome' | 'tuner';
+// Simplified navigation: songs → (sessions if multiple) → practice
+// Stats accessible via icon, Metronome/Tuner integrated as panels in Practice
+type Page = 'songs' | 'sessions' | 'practice' | 'stats';
 const STORAGE_KEY = 'practix_songs';
+const FIRST_RUN_KEY = 'practix_first_run_completed';
+const TOOLTIP_DISMISSED_KEY = 'practix_tooltip_dismissed';
 
 interface MusicPracticeAppProps {
   onShowTutorial?: () => void;
+}
+
+// Create sample song for first-run experience
+function createSampleSong(): Song {
+  const sampleSession: Session = {
+    id: Date.now(),
+    name: '샘플 세션',
+    audioData: null,
+    sections: [],
+    markers: [0],
+  };
+  
+  return {
+    id: Date.now() + 1,
+    name: '샘플 곡',
+    sessions: [sampleSession],
+  };
 }
 
 export default function MusicPracticeApp({ onShowTutorial }: MusicPracticeAppProps) {
@@ -33,8 +52,12 @@ export default function MusicPracticeApp({ onShowTutorial }: MusicPracticeAppPro
   const [currentSession, setCurrentSession] = useState<Session | null>(null);
   const [sections, setSections] = useState<Section[]>([]);
   const [isLoaded, setIsLoaded] = useState(false);
-  const [hasRealData, setHasRealData] = useState(false); // True if user has real data (not just default)
+  const [hasRealData, setHasRealData] = useState(false);
   const [showPermissionDialog, setShowPermissionDialog] = useState(false);
+  
+  // First-run tooltip state
+  const [showFirstRunTooltip, setShowFirstRunTooltip] = useState(false);
+  const [tooltipStep, setTooltipStep] = useState(1);
 
   // Web: microphone permission via browser API
   const requestAllPermissions = async () => {
@@ -51,11 +74,14 @@ export default function MusicPracticeApp({ onShowTutorial }: MusicPracticeAppPro
     setShowPermissionDialog(false);
   };
 
-  // Load songs on mount — web: localStorage + IndexedDB
+  // Load songs on mount
   useEffect(() => {
     const loadData = async () => {
       await requestAllPermissions();
       const stored = localStorage.getItem(STORAGE_KEY);
+      const firstRunCompleted = localStorage.getItem(FIRST_RUN_KEY);
+      const tooltipDismissed = localStorage.getItem(TOOLTIP_DISMISSED_KEY);
+      
       if (stored) {
         try {
           const parsed: Song[] = JSON.parse(stored);
@@ -72,17 +98,28 @@ export default function MusicPracticeApp({ onShowTutorial }: MusicPracticeAppPro
           setHasRealData(true);
         } catch (e) {
           console.error('Failed to parse stored songs:', e);
-          setSongs([{ id: 1, name: '새 곡', sessions: [] }]);
+          // First run: create sample song
+          const sampleSong = createSampleSong();
+          setSongs([sampleSong]);
+          if (tooltipDismissed !== 'true') {
+            setShowFirstRunTooltip(true);
+          }
         }
       } else {
-        setSongs([{ id: 1, name: '새 곡', sessions: [] }]);
+        // First run: create sample song
+        const sampleSong = createSampleSong();
+        setSongs([sampleSong]);
+        localStorage.setItem(FIRST_RUN_KEY, 'true');
+        if (tooltipDismissed !== 'true') {
+          setShowFirstRunTooltip(true);
+        }
       }
       setIsLoaded(true);
     };
     loadData();
   }, []);
 
-  // Save songs whenever they change — web: localStorage
+  // Save songs whenever they change
   useEffect(() => {
     if (!isLoaded || songs.length === 0) return;
     localStorage.setItem(STORAGE_KEY, JSON.stringify(songs));
@@ -96,18 +133,29 @@ export default function MusicPracticeApp({ onShowTutorial }: MusicPracticeAppPro
   const [confirmMessage, setConfirmMessage] = useState('');
   const [inputValue, setInputValue] = useState('');
 
-  // Back button navigation
+  // Dismiss first-run tooltip
+  const dismissTooltip = useCallback(() => {
+    setShowFirstRunTooltip(false);
+    localStorage.setItem(TOOLTIP_DISMISSED_KEY, 'true');
+  }, []);
+
+  // Back button navigation - simplified
   const handleNavigateBack = useCallback(() => {
     if (page === 'practice') {
-      setPage('sessions');
+      // If song has multiple sessions, go to sessions; otherwise go to songs
+      if (currentSong && currentSong.sessions.length > 1) {
+        setPage('sessions');
+      } else {
+        setPage('songs');
+      }
     } else if (page === 'sessions') {
       setPage('songs');
-    } else if (page === 'stats' || page === 'metronome' || page === 'tuner') {
+    } else if (page === 'stats') {
       setPage('songs');
     }
-  }, [page]);
+  }, [page, currentSong]);
 
-  // Modal closers for back button (return true if modal was closed)
+  // Modal closers for back button
   const modalClosers = useMemo(() => [
     () => {
       if (showConfirm) { setShowConfirm(false); return true; }
@@ -125,7 +173,11 @@ export default function MusicPracticeApp({ onShowTutorial }: MusicPracticeAppPro
       if (showPermissionDialog) { setShowPermissionDialog(false); return true; }
       return false;
     },
-  ], [showConfirm, showAddSong, showAddSession, showPermissionDialog]);
+    () => {
+      if (showFirstRunTooltip) { dismissTooltip(); return true; }
+      return false;
+    },
+  ], [showConfirm, showAddSong, showAddSession, showPermissionDialog, showFirstRunTooltip, dismissTooltip]);
 
   // Android back button handler
   const { showExitToast } = useBackButton({
@@ -149,16 +201,13 @@ export default function MusicPracticeApp({ onShowTutorial }: MusicPracticeAppPro
 
     setConfirmMessage(message);
     setConfirmAction(() => () => {
-      // 곡 내 모든 녹음을 휴지통으로 이동
       if (song) {
         song.sessions.forEach((session) => {
-          // 구간 녹음
           session.sections?.forEach((section, sectionIndex) => {
             section.recordedFiles?.forEach((recording) => {
               moveToTrash(recording, songId, session.id, section.id, sectionIndex);
             });
           });
-          // 기본 녹음
           session.basicRecordings?.forEach((recording) => {
             moveToTrash(recording, songId, session.id, null, -1);
           });
@@ -173,7 +222,7 @@ export default function MusicPracticeApp({ onShowTutorial }: MusicPracticeAppPro
   const handleAddSong = useCallback(() => {
     if (inputValue.trim()) {
       setSongs((prev) => [...prev, { id: Date.now(), name: inputValue, sessions: [] }]);
-      setHasRealData(true); // User created real data, enable saving
+      setHasRealData(true);
       setInputValue('');
       setShowAddSong(false);
     }
@@ -197,15 +246,12 @@ export default function MusicPracticeApp({ onShowTutorial }: MusicPracticeAppPro
       setConfirmAction(() => () => {
         if (!currentSong) return;
 
-        // 세션 내 모든 녹음을 휴지통으로 이동
         if (session) {
-          // 구간 녹음
           session.sections?.forEach((section, sectionIndex) => {
             section.recordedFiles?.forEach((recording) => {
               moveToTrash(recording, currentSong.id, sessionId, section.id, sectionIndex);
             });
           });
-          // 기본 녹음
           session.basicRecordings?.forEach((recording) => {
             moveToTrash(recording, currentSong.id, sessionId, null, -1);
           });
@@ -238,7 +284,7 @@ export default function MusicPracticeApp({ onShowTutorial }: MusicPracticeAppPro
         song.id === currentSong.id ? { ...song, sessions: [...song.sessions, newSession] } : song
       );
       setSongs(updatedSongs);
-      setHasRealData(true); // User created real data, enable saving
+      setHasRealData(true);
       setCurrentSong(updatedSongs.find((s) => s.id === currentSong.id) || null);
       setInputValue('');
       setShowAddSession(false);
@@ -251,6 +297,21 @@ export default function MusicPracticeApp({ onShowTutorial }: MusicPracticeAppPro
     setSections(session.sections || []);
     setPage('practice');
   }, []);
+
+  // Simplified song selection: skip sessions page if only 1 session
+  const handleSelectSong = useCallback((song: Song) => {
+    setCurrentSong(song);
+    if (song.sessions.length === 0) {
+      // No sessions - go to sessions page to add one
+      setPage('sessions');
+    } else if (song.sessions.length === 1) {
+      // Single session - go directly to practice
+      openSession(song, song.sessions[0]);
+    } else {
+      // Multiple sessions - show session selector
+      setPage('sessions');
+    }
+  }, [openSession]);
 
   const updateSections = useCallback(
     (newSections: Section[]) => {
@@ -267,7 +328,7 @@ export default function MusicPracticeApp({ onShowTutorial }: MusicPracticeAppPro
             : song
         );
         setSongs(updatedSongs);
-        setHasRealData(true); // User modified data
+        setHasRealData(true);
       }
     },
     [currentSong, currentSession, songs]
@@ -307,7 +368,6 @@ export default function MusicPracticeApp({ onShowTutorial }: MusicPracticeAppPro
       if (currentSong && currentSession) {
         const sheetMusicValue = sheetMusic ?? undefined;
 
-        // Web: sheet music image is stored inline (no separate file needed)
         const updatedSession = { ...currentSession, sheetMusic: sheetMusicValue };
         setCurrentSession(updatedSession);
         const updatedSongs = songs.map((song) =>
@@ -371,7 +431,7 @@ export default function MusicPracticeApp({ onShowTutorial }: MusicPracticeAppPro
     [currentSong, currentSession, songs]
   );
 
-  // Restore recording from trash back to original location
+  // Restore recording from trash
   const handleRestoreRecording = useCallback(
     (trashedItem: TrashedRecording, _songs: Song[]) => {
       const { songId, sessionId, sectionId } = trashedItem.originalLocation;
@@ -386,7 +446,6 @@ export default function MusicPracticeApp({ onShowTutorial }: MusicPracticeAppPro
             sessions: song.sessions.map((sess) => {
               if (sess.id !== sessionId) return sess;
 
-              // If sectionId is null, add to basicRecordings
               if (sectionId === null) {
                 return {
                   ...sess,
@@ -394,7 +453,6 @@ export default function MusicPracticeApp({ onShowTutorial }: MusicPracticeAppPro
                 };
               }
 
-              // Otherwise, add to the specific section
               return {
                 ...sess,
                 sections: (sess.sections || []).map((section) => {
@@ -478,36 +536,77 @@ export default function MusicPracticeApp({ onShowTutorial }: MusicPracticeAppPro
     );
   };
 
-  // BottomNav removed (Capacitor-only feature)
-  const BottomNav = () => null;
+  // First-run tooltip overlay
+  const FirstRunTooltip = () => {
+    if (!showFirstRunTooltip) return null;
 
-  if (page === 'metronome') {
+    const tooltipContent = [
+      { step: 1, text: '오디오 파일을 업로드하세요', position: 'top' },
+      { step: 2, text: '파형을 드래그해서 구간을 만드세요', position: 'middle' },
+      { step: 3, text: '녹음 버튼을 눌러 녹음을 시작하세요', position: 'bottom' },
+    ];
+
+    const current = tooltipContent.find(t => t.step === tooltipStep);
+
     return (
-      <div className={`min-h-screen flex flex-col ${isDark ? 'bg-gray-900' : 'bg-gray-50'}`}>
-        <div className={`${isDark ? 'bg-gray-800' : 'bg-white'} safe-top pb-3 px-5 border-b ${isDark ? 'border-gray-700' : 'border-gray-200'}`}>
-          <h1 className={`text-xl font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>메트로놈</h1>
+      <div 
+        className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center"
+        onClick={dismissTooltip}
+      >
+        <div 
+          className="bg-white rounded-2xl p-6 mx-4 max-w-sm shadow-xl"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div className="flex items-center gap-2 mb-4">
+            {[1, 2, 3].map((step) => (
+              <div
+                key={step}
+                className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
+                  step === tooltipStep
+                    ? 'bg-purple-500 text-white'
+                    : step < tooltipStep
+                    ? 'bg-purple-200 text-purple-600'
+                    : 'bg-gray-200 text-gray-500'
+                }`}
+              >
+                {step}
+              </div>
+            ))}
+          </div>
+          
+          <p className="text-lg font-medium text-gray-800 mb-4">
+            {current?.text}
+          </p>
+          
+          <div className="flex gap-3">
+            {tooltipStep < 3 ? (
+              <>
+                <button
+                  onClick={dismissTooltip}
+                  className="flex-1 px-4 py-2 bg-gray-100 text-gray-600 rounded-lg font-medium"
+                >
+                  건너뛰기
+                </button>
+                <button
+                  onClick={() => setTooltipStep(tooltipStep + 1)}
+                  className="flex-1 px-4 py-2 bg-purple-500 text-white rounded-lg font-medium"
+                >
+                  다음
+                </button>
+              </>
+            ) : (
+              <button
+                onClick={dismissTooltip}
+                className="w-full px-4 py-2 bg-purple-500 text-white rounded-lg font-medium"
+              >
+                시작하기
+              </button>
+            )}
+          </div>
         </div>
-        <MetronomePage isDark={isDark} />
-        <div className="h-16" />
-        <BottomNav />
-        <PermissionDialog />
       </div>
     );
-  }
-
-  if (page === 'tuner') {
-    return (
-      <div className={`min-h-screen flex flex-col ${isDark ? 'bg-gray-900' : 'bg-gray-50'}`}>
-        <div className={`${isDark ? 'bg-gray-800' : 'bg-white'} safe-top pb-3 px-5 border-b ${isDark ? 'border-gray-700' : 'border-gray-200'}`}>
-          <h1 className={`text-xl font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>튜너</h1>
-        </div>
-        <TunerPage isDark={isDark} />
-        <div className="h-16" />
-        <BottomNav />
-        <PermissionDialog />
-      </div>
-    );
-  }
+  };
 
   if (page === 'stats') {
     return (
@@ -524,10 +623,7 @@ export default function MusicPracticeApp({ onShowTutorial }: MusicPracticeAppPro
       <>
         <SongsPage
           songs={songs}
-          onSelectSong={(song) => {
-            setCurrentSong(song);
-            setPage('sessions');
-          }}
+          onSelectSong={handleSelectSong}
           onDeleteSong={deleteSong}
           showAddSong={showAddSong}
           onShowAddSong={setShowAddSong}
@@ -546,9 +642,9 @@ export default function MusicPracticeApp({ onShowTutorial }: MusicPracticeAppPro
           onEmptyTrash={emptyTrash}
         />
         <HelpButton />
-        <BottomNav />
         <PermissionDialog />
         <ExitToast />
+        <FirstRunTooltip />
       </>
     );
   }
@@ -591,7 +687,7 @@ export default function MusicPracticeApp({ onShowTutorial }: MusicPracticeAppPro
           onSheetMusicChange={updateSheetMusic}
           onBasicRecordingsChange={updateBasicRecordings}
           onMetronomeSettingsChange={updateMetronomeSettings}
-          onBack={() => setPage('sessions')}
+          onBack={handleNavigateBack}
           trashFunctions={{
             trashedRecordings: getTrashForSession(currentSession.id),
             moveToTrash: (recording, sectionId, sectionIndex) =>
@@ -601,7 +697,6 @@ export default function MusicPracticeApp({ onShowTutorial }: MusicPracticeAppPro
             emptyTrash,
           }}
         />
-        {/* HelpButton hidden on practice page to avoid overlap with bottom controls */}
         <PermissionDialog />
         <ExitToast />
       </>
@@ -609,27 +704,4 @@ export default function MusicPracticeApp({ onShowTutorial }: MusicPracticeAppPro
   }
 
   return null;
-}
-
-// Bottom nav tab button
-function NavTab({ icon, label, isActive, isDark, onClick }: {
-  icon: string;
-  label: string;
-  isActive: boolean;
-  isDark: boolean;
-  onClick: () => void;
-}) {
-  return (
-    <button
-      onClick={onClick}
-      className={`flex-1 flex flex-col items-center py-2 ${
-        isActive
-          ? 'text-purple-500'
-          : isDark ? 'text-gray-500' : 'text-gray-400'
-      }`}
-    >
-      <span className="text-lg">{icon}</span>
-      <span className="text-[10px] mt-0.5 font-medium">{label}</span>
-    </button>
-  );
 }
