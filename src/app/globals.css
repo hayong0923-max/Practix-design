@@ -1,0 +1,56 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Prevent web-like drag behaviors on mobile app */
+* {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Allow text selection in input fields */
+input,
+textarea,
+[contenteditable="true"] {
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+}
+
+/* Safe area inset for Android 15+ edge-to-edge / iOS notch */
+:root {
+  --sat: env(safe-area-inset-top, 0px);
+  --sab: env(safe-area-inset-bottom, 0px);
+}
+
+/* Header with safe area top padding */
+.safe-top {
+  padding-top: calc(var(--sat) + 0.75rem);
+}
+
+/* Prevent pull-to-refresh and overscroll bounce */
+html {
+  overscroll-behavior: none;
+}
+
+body {
+  overscroll-behavior-y: contain;
+  padding-bottom: var(--sab);
+}
+
+/* Prevent image/link dragging */
+img,
+a {
+  -webkit-user-drag: none;
+  user-drag: none;
+}
+
+/* Canvas should not trigger text selection cursor */
+canvas {
+  touch-action: none;
+}
