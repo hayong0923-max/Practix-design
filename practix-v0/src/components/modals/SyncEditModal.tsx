@@ -251,33 +251,33 @@ export default function SyncEditModal({
   const sectionDuration = sectionEnd - sectionStart;
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <div className={`w-full max-w-md rounded-2xl p-5 ${isDark ? 'bg-gray-800' : 'bg-white'}`}>
+    <div className="fixed inset-0 bg-foreground/50 flex items-center justify-center z-50 p-4">
+      <div className="w-full max-w-md rounded-2xl p-5 bg-card border border-border">
         {/* Header */}
         <div className="flex items-center justify-between mb-4">
-          <h2 className={`text-lg font-bold ${isDark ? 'text-white' : 'text-gray-800'}`}>
+          <h2 className="text-lg font-bold text-foreground">
             싱크 편집
           </h2>
           <button
             onClick={onClose}
-            className={`p-1 rounded-lg ${isDark ? 'hover:bg-gray-700' : 'hover:bg-gray-100'}`}
+            className="p-1 rounded-lg hover:bg-secondary transition-colors"
           >
-            <X className={`w-5 h-5 ${isDark ? 'text-gray-400' : 'text-gray-500'}`} />
+            <X className="w-5 h-5 text-muted-foreground" />
           </button>
         </div>
 
         {/* Waveform Preview */}
-        <div className={`rounded-lg p-3 mb-4 ${isDark ? 'bg-gray-900' : 'bg-gray-100'}`}>
+        <div className="rounded-lg p-3 mb-4 bg-secondary">
           {/* Original waveform */}
           <div className="mb-2">
-            <div className={`text-xs mb-1 ${isDark ? 'text-blue-400' : 'text-blue-600'}`}>
+            <div className="text-xs mb-1 text-blue-600">
               원곡 (구간)
             </div>
             <div className="h-10 flex items-center gap-[1px]">
               {originalWaveform.map((v, i) => (
                 <div
                   key={i}
-                  className={`flex-1 ${isDark ? 'bg-blue-500' : 'bg-blue-400'}`}
+                  className="flex-1 bg-blue-500"
                   style={{ height: `${Math.max(2, v * 100)}%` }}
                 />
               ))}
@@ -286,7 +286,7 @@ export default function SyncEditModal({
 
           {/* Recorded waveform (shifted) */}
           <div>
-            <div className={`text-xs mb-1 flex items-center justify-between ${isDark ? 'text-red-400' : 'text-red-600'}`}>
+            <div className="text-xs mb-1 flex items-center justify-between text-red-600">
               <span>녹음</span>
               <span className="text-[10px]">
                 {offset > 0 ? `+${offset.toFixed(2)}초 (늦게 시작)` :
@@ -302,7 +302,7 @@ export default function SyncEditModal({
               {recordedWaveform.map((v, i) => (
                 <div
                   key={i}
-                  className={`flex-1 ${isDark ? 'bg-red-500' : 'bg-red-400'}`}
+                  className="flex-1 bg-red-500"
                   style={{ height: `${Math.max(2, v * 100)}%` }}
                 />
               ))}
@@ -311,9 +311,9 @@ export default function SyncEditModal({
         </div>
 
         {/* Offset Control */}
-        <div className={`rounded-lg p-3 mb-4 ${isDark ? 'bg-gray-900' : 'bg-gray-100'}`}>
-          <div className={`text-sm font-medium mb-2 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
-            오프셋: <span className="text-purple-500">{offset >= 0 ? '+' : ''}{offset.toFixed(2)}초</span>
+        <div className="rounded-lg p-3 mb-4 bg-secondary">
+          <div className="text-sm font-medium mb-2 text-foreground">
+            오프셋: <span className="text-accent">{offset >= 0 ? '+' : ''}{offset.toFixed(2)}초</span>
           </div>
 
           {/* Main slider */}
@@ -325,41 +325,41 @@ export default function SyncEditModal({
             value={offset}
             onChange={(e) => setOffset(parseFloat(e.target.value))}
             className="w-full h-2 rounded-full appearance-none cursor-pointer mb-3
-              [&::-webkit-slider-track]:bg-gradient-to-r [&::-webkit-slider-track]:from-red-400 [&::-webkit-slider-track]:via-purple-400 [&::-webkit-slider-track]:to-blue-400 [&::-webkit-slider-track]:rounded-full
-              [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-purple-500 [&::-webkit-slider-thumb]:shadow-md
-              [&::-moz-range-track]:bg-gradient-to-r [&::-moz-range-track]:from-red-400 [&::-moz-range-track]:via-purple-400 [&::-moz-range-track]:to-blue-400 [&::-moz-range-track]:rounded-full
-              [&::-moz-range-thumb]:w-5 [&::-moz-range-thumb]:h-5 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-white [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-purple-500 [&::-moz-range-thumb]:border-0"
+              [&::-webkit-slider-track]:bg-muted [&::-webkit-slider-track]:rounded-full
+              [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-card [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-accent [&::-webkit-slider-thumb]:shadow-md
+              [&::-moz-range-track]:bg-muted [&::-moz-range-track]:rounded-full
+              [&::-moz-range-thumb]:w-5 [&::-moz-range-thumb]:h-5 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-card [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-accent [&::-moz-range-thumb]:border-0"
           />
 
           {/* Fine adjustment buttons */}
           <div className="flex items-center justify-center gap-2">
             <button
               onClick={() => setOffset(o => Math.max(-3, o - 0.1))}
-              className={`px-2 py-1 rounded text-xs ${isDark ? 'bg-gray-700 text-gray-300' : 'bg-gray-200 text-gray-700'}`}
+              className="px-2 py-1 rounded text-xs bg-background text-foreground hover:bg-muted transition-colors"
             >
               -0.1s
             </button>
             <button
               onClick={() => setOffset(o => Math.max(-3, o - 0.05))}
-              className={`px-2 py-1 rounded text-xs ${isDark ? 'bg-gray-700 text-gray-300' : 'bg-gray-200 text-gray-700'}`}
+              className="px-2 py-1 rounded text-xs bg-background text-foreground hover:bg-muted transition-colors"
             >
               -0.05s
             </button>
             <button
               onClick={() => setOffset(0)}
-              className={`px-3 py-1 rounded text-xs font-medium ${isDark ? 'bg-purple-600 text-white' : 'bg-purple-500 text-white'}`}
+              className="px-3 py-1 rounded text-xs font-medium bg-accent text-accent-foreground hover:opacity-90 transition-opacity"
             >
               0
             </button>
             <button
               onClick={() => setOffset(o => Math.min(3, o + 0.05))}
-              className={`px-2 py-1 rounded text-xs ${isDark ? 'bg-gray-700 text-gray-300' : 'bg-gray-200 text-gray-700'}`}
+              className="px-2 py-1 rounded text-xs bg-background text-foreground hover:bg-muted transition-colors"
             >
               +0.05s
             </button>
             <button
               onClick={() => setOffset(o => Math.min(3, o + 0.1))}
-              className={`px-2 py-1 rounded text-xs ${isDark ? 'bg-gray-700 text-gray-300' : 'bg-gray-200 text-gray-700'}`}
+              className="px-2 py-1 rounded text-xs bg-background text-foreground hover:bg-muted transition-colors"
             >
               +0.1s
             </button>
@@ -370,25 +370,21 @@ export default function SyncEditModal({
         <div className="flex gap-2 mb-3">
           <button
             onClick={handleAutoSync}
-            className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg text-sm font-medium ${
-              isDark ? 'bg-amber-600 text-white' : 'bg-amber-500 text-white'
-            }`}
+            className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg text-sm font-medium bg-warning text-warning-foreground hover:opacity-90 transition-opacity"
           >
             <Wand2 className="w-4 h-4" />
             자동 싱크
           </button>
           <button
             onClick={isPlaying ? stopPreview : playPreview}
-            className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg text-sm font-medium ${
-              isDark ? 'bg-green-600 text-white' : 'bg-green-500 text-white'
-            }`}
+            className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg text-sm font-medium bg-success text-white hover:opacity-90 transition-opacity"
           >
             {isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
             미리듣기
           </button>
         </div>
 
-        <div className={`text-[10px] text-center mb-3 ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>
+        <div className="text-[10px] text-center mb-3 text-muted-foreground">
           미리듣기: 원곡(좌) + 녹음(우) 스테레오 분리
         </div>
 
@@ -396,15 +392,13 @@ export default function SyncEditModal({
         <div className="flex gap-2">
           <button
             onClick={onClose}
-            className={`flex-1 py-2.5 rounded-lg text-sm font-medium ${
-              isDark ? 'bg-gray-700 text-gray-300' : 'bg-gray-200 text-gray-700'
-            }`}
+            className="flex-1 py-2.5 rounded-lg text-sm font-medium bg-secondary text-secondary-foreground hover:bg-secondary/80 transition-colors"
           >
             취소
           </button>
           <button
             onClick={handleApply}
-            className="flex-1 bg-purple-500 text-white py-2.5 rounded-lg text-sm font-medium"
+            className="flex-1 bg-accent text-accent-foreground py-2.5 rounded-lg text-sm font-medium hover:opacity-90 transition-opacity"
           >
             적용
           </button>

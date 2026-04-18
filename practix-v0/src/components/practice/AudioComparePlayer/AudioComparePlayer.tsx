@@ -290,19 +290,19 @@ function AudioComparePlayer({
   const recordedDuration = recordedBuffer?.duration || 0;
 
   return (
-    <div className="bg-gradient-to-r from-blue-50 to-red-50 rounded-xl p-4 border-2 border-gray-200">
+    <div className="bg-card rounded-xl p-4 border border-border">
       {/* Header with global controls */}
       <div className="flex items-center justify-between mb-3">
-        <h4 className="font-semibold text-gray-800 flex items-center gap-2">
-          🎵 A/B 비교 플레이어
-          <span className="text-xs text-gray-600 font-normal">({recording.name})</span>
+        <h4 className="font-semibold text-foreground flex items-center gap-2">
+          A/B 비교 플레이어
+          <span className="text-xs text-muted-foreground font-normal">({recording.name})</span>
         </h4>
         <div className="flex items-center gap-2">
           {/* Loop toggle */}
           <button
             onClick={onLoopToggle}
             className={`p-1.5 rounded-lg transition-colors ${
-              isLooping ? 'bg-purple-500 text-white' : 'bg-gray-200 text-gray-600 hover:bg-gray-300'
+              isLooping ? 'bg-accent text-accent-foreground' : 'bg-secondary text-secondary-foreground hover:bg-secondary/80'
             }`}
             title="구간 반복"
           >
@@ -312,10 +312,10 @@ function AudioComparePlayer({
           <select
             value={playbackRate}
             onChange={(e) => setPlaybackRate(parseFloat(e.target.value))}
-            className={`text-xs px-2 py-1.5 rounded border bg-white font-medium ${
+            className={`text-xs px-2 py-1.5 rounded border bg-background font-medium ${
               playbackRate !== 1
-                ? 'border-purple-400 text-purple-600'
-                : 'border-gray-300 text-gray-700'
+                ? 'border-accent text-accent'
+                : 'border-border text-foreground'
             }`}
             title="재생 속도"
           >
@@ -329,14 +329,13 @@ function AudioComparePlayer({
       </div>
 
       {/* A/B Balance Slider */}
-      <div className="bg-white/70 rounded-lg p-3 mb-3">
+      <div className="bg-secondary/50 rounded-lg p-3 mb-3">
         <div className="flex items-center justify-between mb-2">
-          <span className="text-xs font-medium text-blue-600">🔵 원곡</span>
-          <span className="text-xs text-gray-500">A/B 밸런스</span>
-          <span className="text-xs font-medium text-red-600">녹음 🔴</span>
+          <span className="text-xs font-medium text-blue-600">원곡</span>
+          <span className="text-xs text-muted-foreground">A/B 밸런스</span>
+          <span className="text-xs font-medium text-red-600">녹음</span>
         </div>
         <div className="relative">
-          <div className="absolute inset-0 h-2 top-1/2 -translate-y-1/2 rounded-full bg-gradient-to-r from-blue-400 via-purple-400 to-red-400 opacity-30" />
           <input
             type="range"
             min="0"
@@ -349,15 +348,15 @@ function AudioComparePlayer({
             onTouchEnd={(e) => e.stopPropagation()}
             style={{ touchAction: 'none' }}
             className="relative w-full h-4 bg-transparent rounded-full appearance-none cursor-pointer z-10
-              [&::-webkit-slider-track]:bg-gradient-to-r [&::-webkit-slider-track]:from-blue-400 [&::-webkit-slider-track]:via-purple-400 [&::-webkit-slider-track]:to-red-400 [&::-webkit-slider-track]:rounded-full [&::-webkit-slider-track]:h-2
-              [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-7 [&::-webkit-slider-thumb]:h-7 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-purple-500 [&::-webkit-slider-thumb]:shadow-md [&::-webkit-slider-thumb]:cursor-pointer
-              [&::-moz-range-track]:bg-gradient-to-r [&::-moz-range-track]:from-blue-400 [&::-moz-range-track]:via-purple-400 [&::-moz-range-track]:to-red-400 [&::-moz-range-track]:rounded-full [&::-moz-range-track]:h-2
-              [&::-moz-range-thumb]:w-7 [&::-moz-range-thumb]:h-7 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-white [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-purple-500 [&::-moz-range-thumb]:shadow-md [&::-moz-range-thumb]:cursor-pointer [&::-moz-range-thumb]:border-0"
+              [&::-webkit-slider-track]:bg-secondary [&::-webkit-slider-track]:rounded-full [&::-webkit-slider-track]:h-2
+              [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-7 [&::-webkit-slider-thumb]:h-7 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-card [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-accent [&::-webkit-slider-thumb]:shadow-md [&::-webkit-slider-thumb]:cursor-pointer
+              [&::-moz-range-track]:bg-secondary [&::-moz-range-track]:rounded-full [&::-moz-range-track]:h-2
+              [&::-moz-range-thumb]:w-7 [&::-moz-range-thumb]:h-7 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-card [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-accent [&::-moz-range-thumb]:shadow-md [&::-moz-range-thumb]:cursor-pointer [&::-moz-range-thumb]:border-0"
           />
         </div>
-        <div className="flex justify-between mt-1 text-[10px] text-gray-400">
+        <div className="flex justify-between mt-1 text-[10px] text-muted-foreground">
           <span>{Math.round((1 - balance) * 100)}%</span>
-          <span className="text-purple-500 font-medium">
+          <span className="text-accent font-medium">
             {balance === 0.5 ? '동시 재생' : balance < 0.5 ? '원곡 중심' : '녹음 중심'}
           </span>
           <span>{Math.round(balance * 100)}%</span>
@@ -691,7 +690,7 @@ function AudioComparePlayer({
       <div className="flex gap-2">
         <button
           onClick={playBoth}
-          className="flex-1 bg-purple-500 hover:bg-purple-600 text-white py-2 rounded-lg text-sm font-medium flex items-center justify-center gap-2"
+          className="flex-1 bg-accent hover:opacity-90 text-accent-foreground py-2 rounded-lg text-sm font-medium flex items-center justify-center gap-2 transition-opacity"
         >
           <Play className="w-4 h-4" />
           원곡+녹음
@@ -699,7 +698,7 @@ function AudioComparePlayer({
         {backingTrack && (
           <button
             onClick={handlePlayAll}
-            className="flex-1 bg-gradient-to-r from-green-500 to-purple-500 hover:from-green-600 hover:to-purple-600 text-white py-2 rounded-lg text-sm font-medium flex items-center justify-center gap-2"
+            className="flex-1 bg-success hover:opacity-90 text-white py-2 rounded-lg text-sm font-medium flex items-center justify-center gap-2 transition-opacity"
           >
             <Play className="w-4 h-4" />
             전체 재생
@@ -707,7 +706,7 @@ function AudioComparePlayer({
         )}
         <button
           onClick={handleResetBoth}
-          className="px-4 bg-gray-500 hover:bg-gray-600 text-white py-2 rounded-lg text-sm font-medium"
+          className="px-4 bg-secondary hover:bg-secondary/80 text-secondary-foreground py-2 rounded-lg text-sm font-medium transition-colors"
         >
           처음으로
         </button>

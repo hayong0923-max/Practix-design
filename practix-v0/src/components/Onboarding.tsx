@@ -110,14 +110,14 @@ export default function Onboarding({ onComplete, onSkip }: OnboardingProps) {
   const progress = ((currentStep + 1) / steps.length) * 100;
 
   return (
-    <div className="fixed inset-0 bg-gradient-to-br from-blue-600 to-purple-700 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-3xl max-w-lg w-full overflow-hidden shadow-2xl">
+    <div className="fixed inset-0 bg-primary flex items-center justify-center z-50 p-4">
+      <div className="bg-card rounded-2xl max-w-lg w-full overflow-hidden shadow-2xl border border-border">
         {/* Header */}
         <div className="relative">
           {/* Progress bar */}
-          <div className="h-1 bg-gray-200">
+          <div className="h-1 bg-secondary">
             <div
-              className="h-full bg-gradient-to-r from-blue-500 to-purple-500 transition-all duration-300"
+              className="h-full bg-accent transition-all duration-300"
               style={{ width: `${progress}%` }}
             />
           </div>
@@ -125,7 +125,7 @@ export default function Onboarding({ onComplete, onSkip }: OnboardingProps) {
           {/* Skip button */}
           <button
             onClick={() => onSkip(dontShowAgain)}
-            className="absolute top-4 right-4 p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+            className="absolute top-4 right-4 p-2 text-muted-foreground hover:text-foreground hover:bg-secondary rounded-lg transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
@@ -138,10 +138,10 @@ export default function Onboarding({ onComplete, onSkip }: OnboardingProps) {
                 onClick={() => setCurrentStep(idx)}
                 className={`w-2 h-2 rounded-full transition-all ${
                   idx === currentStep
-                    ? 'w-6 bg-blue-500'
+                    ? 'w-6 bg-accent'
                     : idx < currentStep
-                    ? 'bg-blue-300'
-                    : 'bg-gray-200'
+                    ? 'bg-accent/50'
+                    : 'bg-secondary'
                 }`}
               />
             ))}
@@ -152,30 +152,30 @@ export default function Onboarding({ onComplete, onSkip }: OnboardingProps) {
         <div className="p-8">
           {/* Icon */}
           <div className="flex justify-center mb-6">
-            <div className="w-20 h-20 bg-gradient-to-br from-blue-100 to-purple-100 rounded-2xl flex items-center justify-center">
-              <StepIcon className="w-10 h-10 text-blue-600" />
+            <div className="w-20 h-20 bg-secondary rounded-2xl flex items-center justify-center">
+              <StepIcon className="w-10 h-10 text-accent" />
             </div>
           </div>
 
           {/* Text */}
           <div className="text-center mb-6">
-            <div className="text-sm text-blue-600 font-medium mb-2">
+            <div className="text-sm text-accent font-medium mb-2">
               STEP {step.id} / {steps.length}
             </div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-3">{step.title}</h2>
-            <p className="text-gray-600">{step.description}</p>
+            <h2 className="text-2xl font-bold text-foreground mb-3">{step.title}</h2>
+            <p className="text-muted-foreground">{step.description}</p>
           </div>
 
           {/* Tips */}
-          <div className="bg-gray-50 rounded-xl p-4 mb-6">
-            <div className="text-sm font-medium text-gray-700 mb-3 flex items-center gap-2">
+          <div className="bg-secondary/50 rounded-xl p-4 mb-6">
+            <div className="text-sm font-medium text-foreground mb-3 flex items-center gap-2">
               <BarChart3 className="w-4 h-4" />
               사용 팁
             </div>
             <ul className="space-y-2">
               {step.tips.map((tip, idx) => (
-                <li key={idx} className="flex items-start gap-2 text-sm text-gray-600">
-                  <Check className="w-4 h-4 text-green-500 flex-shrink-0 mt-0.5" />
+                <li key={idx} className="flex items-start gap-2 text-sm text-muted-foreground">
+                  <Check className="w-4 h-4 text-success flex-shrink-0 mt-0.5" />
                   {tip}
                 </li>
               ))}
@@ -187,7 +187,7 @@ export default function Onboarding({ onComplete, onSkip }: OnboardingProps) {
             {currentStep > 0 && (
               <button
                 onClick={handlePrev}
-                className="flex-1 flex items-center justify-center gap-2 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl font-medium transition-colors"
+                className="flex-1 flex items-center justify-center gap-2 py-3 bg-secondary hover:bg-secondary/80 text-secondary-foreground rounded-xl font-medium transition-colors"
               >
                 <ArrowLeft className="w-5 h-5" />
                 이전
@@ -196,7 +196,7 @@ export default function Onboarding({ onComplete, onSkip }: OnboardingProps) {
 
             <button
               onClick={handleNext}
-              className="flex-1 flex items-center justify-center gap-2 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-medium transition-colors"
+              className="flex-1 flex items-center justify-center gap-2 py-3 bg-accent hover:opacity-90 text-accent-foreground rounded-xl font-medium transition-opacity"
             >
               {currentStep < steps.length - 1 ? (
                 <>
@@ -220,13 +220,13 @@ export default function Onboarding({ onComplete, onSkip }: OnboardingProps) {
               type="checkbox"
               checked={dontShowAgain}
               onChange={(e) => setDontShowAgain(e.target.checked)}
-              className="w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
+              className="w-4 h-4 text-accent rounded border-border focus:ring-ring"
             />
-            <span className="text-sm text-gray-500">다시 보지 않기</span>
+            <span className="text-sm text-muted-foreground">다시 보지 않기</span>
           </label>
           <button
             onClick={() => onSkip(dontShowAgain)}
-            className="text-sm text-gray-400 hover:text-gray-600 transition-colors w-full"
+            className="text-sm text-muted-foreground hover:text-foreground transition-colors w-full"
           >
             건너뛰고 바로 시작하기
           </button>

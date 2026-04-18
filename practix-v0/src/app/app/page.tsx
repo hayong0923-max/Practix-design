@@ -49,8 +49,8 @@ export default function AppPage() {
   // 로딩 중 플래시 방지
   if (!isLoaded) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center">
-        <div className="animate-pulse text-gray-400">로딩 중...</div>
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="animate-pulse text-muted-foreground">로딩 중...</div>
       </div>
     );
   }
