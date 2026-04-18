@@ -237,10 +237,66 @@ export default function SongsPage({
       {/* Content */}
       <main className="pb-24 px-4 pt-4">
         {songs.length === 0 ? (
-          <div className={`text-center py-20 ${isDark ? 'text-zinc-500' : 'text-zinc-400'}`}>
-            <Music2 className="w-12 h-12 mx-auto mb-4 opacity-40" />
-            <p className="text-base font-medium mb-1">아직 곡이 없습니다</p>
-            <p className="text-sm opacity-75">+ 버튼을 눌러 곡을 추가하세요</p>
+          <div className="flex flex-col items-center justify-center py-16 px-6">
+            {/* Illustration */}
+            <div className={`w-24 h-24 rounded-full flex items-center justify-center mb-6 ${
+              isDark ? 'bg-violet-500/10' : 'bg-violet-50'
+            }`}>
+              <Music2 className={`w-12 h-12 ${isDark ? 'text-violet-400' : 'text-violet-500'}`} />
+            </div>
+            
+            {/* Title & Description */}
+            <h2 className={`text-xl font-semibold mb-2 ${isDark ? 'text-white' : 'text-zinc-900'}`}>
+              연습할 곡을 추가하세요
+            </h2>
+            <p className={`text-sm text-center mb-8 max-w-[280px] leading-relaxed ${isDark ? 'text-zinc-400' : 'text-zinc-500'}`}>
+              연습하고 싶은 곡을 추가하고, 오디오를 업로드한 후 구간별로 녹음하며 실력을 키워보세요.
+            </p>
+            
+            {/* Primary CTA */}
+            <button
+              onClick={() => onShowAddSong(true)}
+              className="flex items-center gap-2 px-6 py-3 bg-violet-500 hover:bg-violet-600 active:bg-violet-700 text-white rounded-xl font-medium shadow-lg shadow-violet-500/25 transition-colors"
+            >
+              <Plus className="w-5 h-5" />
+              첫 곡 추가하기
+            </button>
+            
+            {/* How it works */}
+            <div className={`mt-12 w-full max-w-sm ${isDark ? 'bg-zinc-900/50' : 'bg-zinc-100/50'} rounded-2xl p-5`}>
+              <p className={`text-xs font-medium mb-4 ${isDark ? 'text-zinc-500' : 'text-zinc-400'}`}>
+                이렇게 사용하세요
+              </p>
+              <div className="space-y-4">
+                <div className="flex items-start gap-3">
+                  <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 ${
+                    isDark ? 'bg-violet-500/20 text-violet-400' : 'bg-violet-100 text-violet-600'
+                  }`}>1</div>
+                  <div>
+                    <p className={`text-sm font-medium ${isDark ? 'text-zinc-200' : 'text-zinc-700'}`}>곡 추가</p>
+                    <p className={`text-xs mt-0.5 ${isDark ? 'text-zinc-500' : 'text-zinc-400'}`}>연습할 곡 이름을 입력하세요</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 ${
+                    isDark ? 'bg-violet-500/20 text-violet-400' : 'bg-violet-100 text-violet-600'
+                  }`}>2</div>
+                  <div>
+                    <p className={`text-sm font-medium ${isDark ? 'text-zinc-200' : 'text-zinc-700'}`}>오디오 업로드</p>
+                    <p className={`text-xs mt-0.5 ${isDark ? 'text-zinc-500' : 'text-zinc-400'}`}>원곡이나 반주 파일을 업로드하세요</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 ${
+                    isDark ? 'bg-violet-500/20 text-violet-400' : 'bg-violet-100 text-violet-600'
+                  }`}>3</div>
+                  <div>
+                    <p className={`text-sm font-medium ${isDark ? 'text-zinc-200' : 'text-zinc-700'}`}>구간 나누기 & 녹음</p>
+                    <p className={`text-xs mt-0.5 ${isDark ? 'text-zinc-500' : 'text-zinc-400'}`}>연습할 구간을 만들고 녹음하세요</p>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         ) : (
           <div className="space-y-3">

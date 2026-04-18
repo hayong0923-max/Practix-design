@@ -182,13 +182,44 @@ const PracticePageContent = memo(function PracticePageContent() {
         </div>
       </div>
 
-      {/* BOTTOM ZONE: Fixed Action Bar */}
+      {/* BOTTOM ZONE: Fixed Action Bar - Redesigned for better UX */}
       <div 
-        className={`fixed bottom-0 left-0 right-0 ${isDark ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} border-t`}
+        className={`fixed bottom-0 left-0 right-0 ${isDark ? 'bg-zinc-900/95 border-zinc-800' : 'bg-white/95 border-zinc-200'} border-t backdrop-blur-sm`}
         style={{ paddingBottom: 'var(--sab, 0px)' }}
       >
-        <div className="flex items-center justify-around py-3 px-4">
-          {/* Record Button */}
+        <div className="flex items-center justify-between py-2 px-4">
+          {/* Left Side Tools */}
+          <div className="flex items-center gap-1">
+            {/* Metronome Toggle */}
+            <button
+              onClick={() => setActivePanel(activePanel === 'metronome' ? null : 'metronome')}
+              className={`flex flex-col items-center gap-0.5 px-3 py-2 rounded-xl transition-all ${
+                ctx.metronomeIsPlaying
+                  ? 'bg-emerald-500/20 text-emerald-500'
+                  : activePanel === 'metronome'
+                    ? isDark ? 'bg-zinc-800 text-zinc-200' : 'bg-zinc-100 text-zinc-700'
+                    : isDark ? 'text-zinc-500 active:bg-zinc-800' : 'text-zinc-400 active:bg-zinc-100'
+              }`}
+            >
+              <MetronomeIcon className="w-5 h-5" />
+              <span className="text-[10px] font-medium">메트로놈</span>
+            </button>
+
+            {/* Tuner Toggle */}
+            <button
+              onClick={() => setActivePanel(activePanel === 'tuner' ? null : 'tuner')}
+              className={`flex flex-col items-center gap-0.5 px-3 py-2 rounded-xl transition-all ${
+                activePanel === 'tuner'
+                  ? isDark ? 'bg-violet-500/20 text-violet-400' : 'bg-violet-100 text-violet-600'
+                  : isDark ? 'text-zinc-500 active:bg-zinc-800' : 'text-zinc-400 active:bg-zinc-100'
+              }`}
+            >
+              <TunerIcon className="w-5 h-5" />
+              <span className="text-[10px] font-medium">튜너</span>
+            </button>
+          </div>
+
+          {/* Center: PROMINENT Record Button */}
           <RecordButton
             isRecording={ctx.isRecording}
             isCountingDown={ctx.isCountingDown}
@@ -198,44 +229,42 @@ const PracticePageContent = memo(function PracticePageContent() {
             isDark={isDark}
           />
 
-          {/* Metronome Toggle */}
-          <button
-            onClick={() => setActivePanel(activePanel === 'metronome' ? null : 'metronome')}
-            className={`flex flex-col items-center gap-1 px-4 py-2 rounded-xl transition-colors ${
-              activePanel === 'metronome' || ctx.metronomeIsPlaying
-                ? 'bg-green-500/20 text-green-500'
-                : isDark ? 'text-gray-400 active:bg-gray-700' : 'text-gray-500 active:bg-gray-100'
-            }`}
-          >
-            <MetronomeIcon className="w-6 h-6" />
-            <span className="text-xs">메트로놈</span>
-          </button>
+          {/* Right Side: More Button */}
+          <div className="flex items-center gap-1">
+            {/* Playback Rate (if audio loaded) */}
+            {audioBuffer && (
+              <button
+                onClick={() => {
+                  // Cycle through playback rates: 1x -> 0.75x -> 0.5x -> 1x
+                  const rates = [1, 0.75, 0.5];
+                  const currentIndex = rates.indexOf(ctx.playbackRate);
+                  const nextIndex = (currentIndex + 1) % rates.length;
+                  ctx.setPlaybackRate(rates[nextIndex]);
+                }}
+                className={`flex flex-col items-center gap-0.5 px-3 py-2 rounded-xl transition-all ${
+                  ctx.playbackRate !== 1
+                    ? isDark ? 'bg-amber-500/20 text-amber-400' : 'bg-amber-100 text-amber-600'
+                    : isDark ? 'text-zinc-500 active:bg-zinc-800' : 'text-zinc-400 active:bg-zinc-100'
+                }`}
+              >
+                <span className="text-sm font-bold">{ctx.playbackRate}x</span>
+                <span className="text-[10px] font-medium">속도</span>
+              </button>
+            )}
 
-          {/* Tuner Toggle */}
-          <button
-            onClick={() => setActivePanel(activePanel === 'tuner' ? null : 'tuner')}
-            className={`flex flex-col items-center gap-1 px-4 py-2 rounded-xl transition-colors ${
-              activePanel === 'tuner'
-                ? 'bg-purple-500/20 text-purple-500'
-                : isDark ? 'text-gray-400 active:bg-gray-700' : 'text-gray-500 active:bg-gray-100'
-            }`}
-          >
-            <TunerIcon className="w-6 h-6" />
-            <span className="text-xs">튜너</span>
-          </button>
-
-          {/* More Button */}
-          <button
-            onClick={() => setActivePanel(activePanel === 'more' ? null : 'more')}
-            className={`flex flex-col items-center gap-1 px-4 py-2 rounded-xl transition-colors ${
-              activePanel === 'more'
-                ? isDark ? 'bg-gray-700 text-white' : 'bg-gray-200 text-gray-900'
-                : isDark ? 'text-gray-400 active:bg-gray-700' : 'text-gray-500 active:bg-gray-100'
-            }`}
-          >
-            <MoreHorizontal className="w-6 h-6" />
-            <span className="text-xs">더보기</span>
-          </button>
+            {/* More Button */}
+            <button
+              onClick={() => setActivePanel(activePanel === 'more' ? null : 'more')}
+              className={`flex flex-col items-center gap-0.5 px-3 py-2 rounded-xl transition-all ${
+                activePanel === 'more'
+                  ? isDark ? 'bg-zinc-800 text-zinc-200' : 'bg-zinc-100 text-zinc-700'
+                  : isDark ? 'text-zinc-500 active:bg-zinc-800' : 'text-zinc-400 active:bg-zinc-100'
+              }`}
+            >
+              <MoreHorizontal className="w-5 h-5" />
+              <span className="text-[10px] font-medium">더보기</span>
+            </button>
+          </div>
         </div>
       </div>
 
@@ -337,7 +366,7 @@ const PracticePageContent = memo(function PracticePageContent() {
   );
 });
 
-// --- Record Button Component ---
+// --- Record Button Component - Prominent Primary Action ---
 interface RecordButtonProps {
   isRecording: boolean;
   isCountingDown: boolean;
@@ -389,25 +418,35 @@ function RecordButton({ isRecording, isCountingDown, countdown, onPress, onLongP
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
       onTouchCancel={handleTouchCancel}
-      className={`flex flex-col items-center gap-1 px-4 py-2 rounded-xl transition-colors ${
-        isActive
-          ? 'bg-red-500 text-white'
-          : isDark ? 'text-gray-400 active:bg-gray-700' : 'text-gray-500 active:bg-gray-100'
-      }`}
+      className="relative -mt-4"
       style={{ touchAction: 'manipulation' }}
     >
-      <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
-        isActive ? 'bg-white/20' : isDark ? 'bg-red-500/20' : 'bg-red-100'
+      {/* Main Circle Button */}
+      <div className={`w-16 h-16 rounded-full flex items-center justify-center shadow-lg transition-all transform active:scale-95 ${
+        isActive
+          ? 'bg-red-500 shadow-red-500/40'
+          : 'bg-red-500 shadow-red-500/30 hover:shadow-red-500/50'
       }`}>
         {isCountingDown ? (
-          <span className={`text-lg font-bold ${isActive ? 'text-white' : 'text-red-500'}`}>{countdown}</span>
+          <span className="text-2xl font-bold text-white">{countdown}</span>
         ) : isRecording ? (
-          <Square className={`w-5 h-5 ${isActive ? 'text-white' : 'text-red-500'}`} />
+          <Square className="w-6 h-6 text-white fill-white" />
         ) : (
-          <Mic className={`w-5 h-5 ${isActive ? 'text-white' : 'text-red-500'}`} />
+          <Mic className="w-7 h-7 text-white" />
         )}
       </div>
-      <span className="text-xs">{isRecording ? '중지' : '녹음'}</span>
+      
+      {/* Label */}
+      <span className={`absolute -bottom-5 left-1/2 -translate-x-1/2 text-[10px] font-medium whitespace-nowrap ${
+        isDark ? 'text-zinc-400' : 'text-zinc-500'
+      }`}>
+        {isRecording ? '탭하여 중지' : '길게 눌러 설정'}
+      </span>
+      
+      {/* Recording Indicator Pulse */}
+      {isRecording && (
+        <div className="absolute inset-0 rounded-full bg-red-500 animate-ping opacity-30" />
+      )}
     </button>
   );
 }

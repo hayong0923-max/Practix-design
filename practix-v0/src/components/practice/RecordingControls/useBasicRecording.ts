@@ -71,7 +71,7 @@ export function useBasicRecording() {
     ctx.onBasicRecordingsChange([newRecording, ...basicRecordings]);
     setSelectedBasicRecordingId(recordingId);
     ctx.haptics.recordingStop();
-    ctx.toastSuccess('녹음이 저장되었습니다');
+    ctx.toastRecording('녹음 완료', ctx.recordingTime);
 
     ctx.onRecordingComplete(
       ctx.currentSong.id,

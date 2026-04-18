@@ -1,15 +1,16 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Check, AlertCircle, Info, Trash2, RotateCcw, X } from 'lucide-react';
+import { Check, AlertCircle, Info, Trash2, RotateCcw, X, Mic } from 'lucide-react';
 
-export type ToastType = 'success' | 'error' | 'info' | 'trash' | 'restore';
+export type ToastType = 'success' | 'error' | 'info' | 'trash' | 'restore' | 'recording';
 
 export interface ToastMessage {
   id: number;
   message: string;
   type: ToastType;
   duration?: number;
+  subtitle?: string; // For recording success, show duration
 }
 
 interface ToastProps {
@@ -41,6 +42,12 @@ function Toast({ toast, onDismiss }: ToastProps) {
     switch (toast.type) {
       case 'success':
         return <Check className="w-5 h-5 text-green-400" />;
+      case 'recording':
+        return (
+          <div className="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center">
+            <Mic className="w-4 h-4 text-white" />
+          </div>
+        );
       case 'error':
         return <AlertCircle className="w-5 h-5 text-red-400" />;
       case 'trash':
@@ -56,6 +63,7 @@ function Toast({ toast, onDismiss }: ToastProps) {
   const getBorderColor = () => {
     switch (toast.type) {
       case 'success':
+      case 'recording':
         return 'border-l-green-500';
       case 'error':
         return 'border-l-red-500';
@@ -69,12 +77,44 @@ function Toast({ toast, onDismiss }: ToastProps) {
     }
   };
 
+  // Recording toast gets special treatment - larger and more celebratory
+  if (toast.type === 'recording') {
+    return (
+      <div
+        className={`
+          flex items-center gap-4 px-5 py-4
+          bg-zinc-900/95 backdrop-blur-sm
+          rounded-2xl shadow-xl shadow-green-500/10 border border-green-500/20
+          transition-all duration-300 ease-out
+          ${isVisible && !isLeaving ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-4 scale-95'}
+        `}
+      >
+        {getIcon()}
+        <div className="flex-1">
+          <p className="text-sm font-medium text-white">{toast.message}</p>
+          {toast.subtitle && (
+            <p className="text-xs text-zinc-400 mt-0.5">{toast.subtitle}</p>
+          )}
+        </div>
+        <button
+          onClick={() => {
+            setIsLeaving(true);
+            setTimeout(() => onDismiss(toast.id), 300);
+          }}
+          className="p-1.5 text-zinc-500 active:text-white rounded-lg hover:bg-zinc-800"
+        >
+          <X className="w-4 h-4" />
+        </button>
+      </div>
+    );
+  }
+
   return (
     <div
       className={`
         flex items-center gap-3 px-4 py-3
-        bg-gray-800/95 backdrop-blur-sm
-        rounded-lg shadow-lg border-l-4 ${getBorderColor()}
+        bg-zinc-900/95 backdrop-blur-sm
+        rounded-xl shadow-lg border-l-4 ${getBorderColor()}
         transition-all duration-300 ease-out
         ${isVisible && !isLeaving ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}
       `}
@@ -86,7 +126,7 @@ function Toast({ toast, onDismiss }: ToastProps) {
           setIsLeaving(true);
           setTimeout(() => onDismiss(toast.id), 300);
         }}
-        className="p-1 text-gray-400 active:text-white"
+        className="p-1 text-zinc-400 active:text-white"
       >
         <X className="w-4 h-4" />
       </button>

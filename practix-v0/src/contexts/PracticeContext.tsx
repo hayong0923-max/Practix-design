@@ -154,6 +154,7 @@ export interface PracticeContextType {
   toastTrash: (message: string) => number;
   toastRestore: (message: string) => number;
   toastInfo: (message: string) => number;
+  toastRecording: (message: string, durationSeconds?: number) => number;
 
   // Haptics
   haptics: ReturnType<typeof useHaptics>;
@@ -207,7 +208,7 @@ export function PracticeProvider({
   const isCapacitor = false; // web-only build: always false
   const { isDark } = useTheme();
   const { customTags, addTag, updateTag, deleteTag, isLabelTaken } = useCustomTags();
-  const { toasts, dismissToast, success: toastSuccess, trash: toastTrash, restore: toastRestore, info: toastInfo } = useToast();
+  const { toasts, dismissToast, success: toastSuccess, trash: toastTrash, restore: toastRestore, info: toastInfo, recording: toastRecording } = useToast();
   const haptics = useHaptics();
   const { onRecordingComplete } = usePracticeStatsContext();
 
@@ -418,8 +419,8 @@ export function PracticeProvider({
     playBackingTrack, stopBackingTrack, toggleBackingTrack, seekBackingTrack, updateBackingTrackVolume,
     // Custom tags
     customTags, addTag, updateTag, deleteTag, isLabelTaken,
-    // Toast
-    toasts, dismissToast, toastSuccess, toastTrash, toastRestore, toastInfo,
+  // Toast
+  toasts, dismissToast, toastSuccess, toastTrash, toastRestore, toastInfo, toastRecording,
     // Haptics
     haptics,
     // Practice stats
