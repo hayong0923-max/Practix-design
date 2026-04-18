@@ -1,0 +1,31 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run build:*)",
+      "Bash(npm install:*)",
+      "Bash(npm run build:static:*)",
+      "Bash(npx cap add android)",
+      "Bash(npx cap sync:*)",
+      "Bash(npm run test:run:*)",
+      "Bash(npx tsc:*)",
+      "Bash(git init:*)",
+      "Bash(tree:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(npm run build:android:*)",
+      "Bash(./gradlew assembleDebug:*)",
+      "Bash(./gradlew clean:*)",
+      "Bash(dir:*)",
+      "Bash(git checkout:*)",
+      "Bash(npx next build:*)",
+      "Bash(claude api-usage:*)",
+      "Bash(claude usage:*)",
+      "Bash(grep -r \"supabase\\\\|@supabase\\\\|createClient\" C:UserszeusjOneDriveDocumentsProgrammingmusic-practice-absrc --include=*.ts --include=*.tsx)",
+      "Bash(grep -r \"localStorage\\\\|sessionStorage\" C:UserszeusjOneDriveDocumentsProgrammingmusic-practice-absrc --include=*.ts --include=*.tsx)",
+      "Bash(npm uninstall:*)",
+      "Bash(git -C /c/Users/zeusj/OneDrive/Documents/Programming/music-practice-ab status)",
+      "Bash(git -C /c/Users/zeusj/OneDrive/Documents/Programming/music-practice-ab diff --stat)",
+      "Bash(git -C /c/Users/zeusj/OneDrive/Documents/Programming/music-practice-ab log --oneline -5)"
+    ]
+  }
+}
