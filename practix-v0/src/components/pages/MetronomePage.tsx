@@ -110,7 +110,7 @@ export default function MetronomePage({ isDark }: MetronomePageProps) {
   };
 
   return (
-    <div className="flex-1 flex flex-col items-center justify-center px-6 bg-background">
+    <div className="flex-1 flex flex-col items-center justify-center px-6 pb-24 bg-background">
       {/* Beat indicator */}
       <div className="mb-8">
         <MetronomeBeatIndicator

@@ -68,7 +68,7 @@ export default function SessionsPage({
       </header>
 
       {/* Content */}
-      <main className="max-w-3xl mx-auto px-6 py-8">
+      <main className="max-w-3xl mx-auto px-6 py-8 pb-28">
         {currentSong.sessions.length === 0 ? (
           <div className="text-center py-20">
             <div className="w-16 h-16 rounded-full bg-secondary flex items-center justify-center mx-auto mb-6">

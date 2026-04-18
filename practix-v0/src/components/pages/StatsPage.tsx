@@ -88,7 +88,7 @@ export default function StatsPage({ songs, onBack }: StatsPageProps) {
         </div>
       </header>
 
-      <main className="max-w-4xl mx-auto px-6 py-6 space-y-6">
+      <main className="max-w-4xl mx-auto px-6 py-6 pb-28 space-y-6">
         {/* Today&apos;s Goals */}
         <section className="bg-card border border-border rounded-xl p-6">
           <div className="flex items-center justify-between mb-6">

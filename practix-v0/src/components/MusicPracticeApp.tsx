@@ -476,8 +476,45 @@ export default function MusicPracticeApp({ onShowTutorial }: MusicPracticeAppPro
     );
   };
 
-  // BottomNav removed (Capacitor-only feature)
-  const BottomNav = () => null;
+  // Bottom Navigation Bar - 2026 Modern Style
+  const BottomNav = () => (
+    <nav className="fixed bottom-0 left-0 right-0 z-40 bg-card/95 backdrop-blur-md border-t border-border" style={{ paddingBottom: 'var(--sab, 0px)' }}>
+      <div className="flex items-center justify-around max-w-lg mx-auto">
+        <NavTab
+          icon="🎵"
+          label="곡 목록"
+          isActive={page === 'songs' || page === 'sessions' || page === 'practice'}
+          isDark={isDark}
+          onClick={() => {
+            if (page === 'practice') setPage('sessions');
+            else if (page === 'sessions') setPage('songs');
+            else setPage('songs');
+          }}
+        />
+        <NavTab
+          icon="📊"
+          label="통계"
+          isActive={page === 'stats'}
+          isDark={isDark}
+          onClick={() => setPage('stats')}
+        />
+        <NavTab
+          icon="🎚️"
+          label="메트로놈"
+          isActive={page === 'metronome'}
+          isDark={isDark}
+          onClick={() => setPage('metronome')}
+        />
+        <NavTab
+          icon="🎸"
+          label="튜너"
+          isActive={page === 'tuner'}
+          isDark={isDark}
+          onClick={() => setPage('tuner')}
+        />
+      </div>
+    </nav>
+  );
 
   if (page === 'metronome') {
     return (
@@ -511,6 +548,7 @@ export default function MusicPracticeApp({ onShowTutorial }: MusicPracticeAppPro
     return (
       <>
         <StatsPage songs={songs} onBack={() => setPage('songs')} />
+        <BottomNav />
         <PermissionDialog />
         <ExitToast />
       </>
@@ -570,6 +608,7 @@ export default function MusicPracticeApp({ onShowTutorial }: MusicPracticeAppPro
           onCancelConfirm={() => setShowConfirm(false)}
         />
         <HelpButton />
+        <BottomNav />
         <PermissionDialog />
         <ExitToast />
       </>
@@ -609,7 +648,7 @@ export default function MusicPracticeApp({ onShowTutorial }: MusicPracticeAppPro
   return null;
 }
 
-// Bottom nav tab button
+// Bottom nav tab button - Modern 2026 Style
 function NavTab({ icon, label, isActive, isDark, onClick }: {
   icon: string;
   label: string;
@@ -620,14 +659,18 @@ function NavTab({ icon, label, isActive, isDark, onClick }: {
   return (
     <button
       onClick={onClick}
-      className={`flex-1 flex flex-col items-center py-2 ${
+      className={`relative flex-1 flex flex-col items-center py-3 transition-all active:scale-95 ${
         isActive
           ? 'text-accent'
-          : 'text-muted-foreground'
+          : 'text-muted-foreground hover:text-foreground'
       }`}
     >
-      <span className="text-lg">{icon}</span>
-      <span className="text-[10px] mt-0.5 font-medium">{label}</span>
+      {/* Active indicator */}
+      {isActive && (
+        <span className="absolute top-0 left-1/2 -translate-x-1/2 w-8 h-1 bg-accent rounded-b-full" />
+      )}
+      <span className="text-xl">{icon}</span>
+      <span className="text-[11px] mt-1 font-medium">{label}</span>
     </button>
   );
 }

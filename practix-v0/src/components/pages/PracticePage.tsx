@@ -69,7 +69,7 @@ const PracticePageContent = memo(function PracticePageContent() {
       </header>
 
       {/* Main Content */}
-      <main className="max-w-4xl mx-auto px-6 py-6 space-y-6">
+      <main className="max-w-4xl mx-auto px-6 py-6 pb-28 space-y-6">
         {/* Waveform Card */}
         <section className="bg-card border border-border rounded-xl p-6">
           <WaveformDisplay />

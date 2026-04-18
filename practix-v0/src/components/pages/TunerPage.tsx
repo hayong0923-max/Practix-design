@@ -171,7 +171,7 @@ export default function TunerPage({ isDark }: TunerPageProps) {
   const gaugePos = Math.max(-1, Math.min(1, cents / 50));
 
   return (
-    <div className={`flex-1 flex flex-col items-center justify-center px-6 ${isDark ? 'bg-gray-900' : 'bg-gray-50'}`}>
+    <div className="flex-1 flex flex-col items-center justify-center px-6 pb-24 bg-background">
       {/* Gauge */}
       <div className="w-full max-w-xs mb-8">
         {/* Tick marks */}
@@ -183,11 +183,9 @@ export default function TunerPage({ isDark }: TunerPageProps) {
               style={{ left: `${((tick + 50) / 100) * 100}%`, transform: 'translateX(-50%)' }}
             >
               <div className={`w-0.5 ${tick === 0 ? 'h-5' : 'h-3'} ${
-                tick === 0
-                  ? 'bg-green-500'
-                  : isDark ? 'bg-gray-600' : 'bg-gray-300'
+                tick === 0 ? 'bg-success' : 'bg-border'
               }`} />
-              <span className={`text-[10px] mt-0.5 ${isDark ? 'text-gray-600' : 'text-gray-400'}`}>
+              <span className="text-[10px] mt-0.5 text-muted-foreground">
                 {tick === 0 ? '0' : tick > 0 ? `+${tick}` : tick}
               </span>
             </div>
@@ -196,14 +194,14 @@ export default function TunerPage({ isDark }: TunerPageProps) {
 
         {/* Needle */}
         <div className="relative h-4">
-          <div className={`absolute top-0 h-full rounded-full ${isDark ? 'bg-gray-700' : 'bg-gray-200'}`} style={{ left: 0, right: 0 }} />
+          <div className="absolute top-0 h-full rounded-full bg-secondary" style={{ left: 0, right: 0 }} />
           {/* Center zone */}
-          <div className="absolute top-0 h-full bg-green-500/20 rounded-full" style={{ left: '40%', width: '20%' }} />
+          <div className="absolute top-0 h-full bg-success/20 rounded-full" style={{ left: '40%', width: '20%' }} />
           {/* Needle indicator */}
           {confidence > 0.5 && (
             <div
               className={`absolute top-1/2 -translate-y-1/2 w-4 h-4 rounded-full shadow-lg transition-all duration-100 ${
-                isInTune ? 'bg-green-500 shadow-green-500/50' : isDark ? 'bg-gray-300' : 'bg-gray-600'
+                isInTune ? 'bg-success shadow-success/50' : 'bg-foreground'
               }`}
               style={{ left: `calc(${((gaugePos + 1) / 2) * 100}% - 8px)` }}
             />
@@ -214,7 +212,7 @@ export default function TunerPage({ isDark }: TunerPageProps) {
       {/* Note display */}
       <div className="text-center mb-2">
         <span className={`text-8xl font-bold tracking-wider ${
-          confidence > 0.5 ? (isInTune ? 'text-green-500' : isDark ? 'text-white' : 'text-gray-900') : isDark ? 'text-gray-700' : 'text-gray-300'
+          confidence > 0.5 ? (isInTune ? 'text-success' : 'text-foreground') : 'text-muted-foreground/30'
         }`}>
           {note || '--'}
         </span>
@@ -222,14 +220,14 @@ export default function TunerPage({ isDark }: TunerPageProps) {
 
       {/* Cents */}
       <div className="text-center mb-2">
-        <span className={`text-2xl font-medium ${confidence > 0.5 ? centsColor : isDark ? 'text-gray-700' : 'text-gray-300'}`}>
+        <span className={`text-2xl font-medium ${confidence > 0.5 ? centsColor : 'text-muted-foreground/30'}`}>
           {confidence > 0.5 ? (cents > 0 ? `+${cents}` : cents) : '0'} cents
         </span>
       </div>
 
       {/* Frequency */}
       <div className="mb-12">
-        <span className={`text-sm ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>
+        <span className="text-sm text-muted-foreground">
           {confidence > 0.5 ? `${frequency} Hz` : '-- Hz'}
         </span>
       </div>
@@ -237,19 +235,19 @@ export default function TunerPage({ isDark }: TunerPageProps) {
       {/* Listen button */}
       <button
         onClick={isListening ? stopListening : startListening}
-        className={`w-20 h-20 rounded-full flex items-center justify-center shadow-lg ${
+        className={`w-20 h-20 rounded-full flex items-center justify-center shadow-lg active:scale-95 transition-all ${
           isListening
-            ? 'bg-red-500 active:bg-red-600'
-            : isDark ? 'bg-purple-500 active:bg-purple-600' : 'bg-purple-500 active:bg-purple-600'
+            ? 'bg-destructive hover:bg-destructive/90'
+            : 'bg-accent hover:bg-accent/90'
         }`}
       >
         {isListening ? (
-          <MicOff className="w-8 h-8 text-white" />
+          <MicOff className="w-8 h-8 text-destructive-foreground" />
         ) : (
-          <Mic className="w-8 h-8 text-white" />
+          <Mic className="w-8 h-8 text-accent-foreground" />
         )}
       </button>
-      <p className={`mt-3 text-sm ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>
+      <p className="mt-3 text-sm text-muted-foreground">
         {isListening ? '듣는 중...' : '탭하여 시작'}
       </p>
     </div>
